@@ -16,7 +16,7 @@ Welcome to **StrongLife**! This project is a healthy lifestyle organizer designe
 
 ### 1. **Database Setup**
 
-The database structure can be found in the `db` directory of this project. To load the database into your local MariaDB instance, use the following command:
+The database structure can be found in the `db` directory of this project. To load the database into your local MariaDB instance, use:
 
 ```bash
 mysql -u username -p database_name < path_to_db_file.sql
@@ -24,14 +24,14 @@ mysql -u username -p database_name < path_to_db_file.sql
 
 ### 2. **Backend Setup**
 
-1. Create a `.env` file with your database credentials:
+1. Create a `.env` file with the database credentials:
 
     ```bash
     usuariodb=user_of_db
     passdb=password_of_db
     ```
 
-2. The backend is configured to run on port `8080` by default. You can change this setting if needed. To start the Go server, run:
+2. The backend will run on  `8080` by default. To start the Go server, run:
 
     ```bash
     go run main/main.go
@@ -39,13 +39,13 @@ mysql -u username -p database_name < path_to_db_file.sql
 
 ### 3. **Frontend Setup (React Native)**
 
-1. Make sure you have Expo CLI installed. If you don't, install it using npm:
+1. You must have expo-CLI installed:
 
     ```bash
     npm install -g expo-cli
     ```
 
-2. Navigate to the project directory, install the required dependencies, and run the development server:
+2. Navigate to the project directory, install the  dependencies, and run:
 
     ```bash
     npm install
@@ -74,6 +74,3 @@ If you'd like to contribute to **StrongLife**, feel free to open issues or submi
 
 ---
 
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
