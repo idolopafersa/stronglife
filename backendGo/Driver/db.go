@@ -15,7 +15,7 @@ var db *sql.DB
 
 func OpenDB() {
 
-	dbdirection := fmt.Sprintf("%s:%s@tcp(localhost:3306)/FitCalendar", os.Getenv("usuariodb"), os.Getenv("passdb"))
+	dbdirection := fmt.Sprintf("%s:%s@tcp(localhost:3306)/StrongLife", os.Getenv("usuariodb"), os.Getenv("passdb"))
 	var err error
 	db, err = sql.Open("mysql", dbdirection)
 
