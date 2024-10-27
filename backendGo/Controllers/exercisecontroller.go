@@ -6,6 +6,7 @@ import (
 	"backendgo/security"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -15,27 +16,18 @@ func GetExercise(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
-		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
+		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
 		return
 	}
-	cookie, err := r.Cookie("token")
+
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	exe, erre := driver.GetExercise(id)
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error GET exercise driver : %s /n", err)
 		http.Error(w, "Exercise not found", http.StatusNotFound)
 		return
 	}
@@ -49,28 +41,17 @@ func PostExercise(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&exercise); err != nil {
 		http.Error(w, "Invalid payload", http.StatusBadRequest)
-		fmt.Print(err)
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	id, err := driver.PostExercise(exercise)
 	if err != nil {
-		fmt.Print(err)
+		log.Printf("Error POST exercise driver : %s /n", err)
 		http.Error(w, "Error adding exercise", http.StatusInternalServerError)
 		return
 	}
@@ -84,29 +65,18 @@ func DelExercise(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
-
 		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
-	cookie, err := r.Cookie("token")
+
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	erre := driver.DelExercise(id)
 	if erre != nil {
-		fmt.Print(err)
+		log.Printf("Error DEL exercise driver: %s /n", err)
 		http.Error(w, "Exercise not found", http.StatusNotFound)
 		return
 	}
@@ -116,29 +86,18 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&exercise); err != nil {
 		http.Error(w, "Payload inválido", http.StatusBadRequest)
-		fmt.Print(err)
+
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	erre := driver.PutExercise(exercise)
-	fmt.Print(erre)
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error PUT exercise  driver: %s /n", err)
 		http.Error(w, "Error al actualizar el ejercicio", http.StatusInternalServerError)
 		return
 	}
@@ -148,25 +107,14 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 
 func GetAlExercises(w http.ResponseWriter, r *http.Request) {
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	exercises, erre := driver.GetAlExercises()
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error GET all exercises  driver: %s /n", err)
 		http.Error(w, "routine not found", http.StatusNotFound)
 		return
 	}

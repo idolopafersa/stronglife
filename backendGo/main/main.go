@@ -3,7 +3,6 @@ package main
 import (
 	controllers "backendgo/Controllers"
 	driver "backendgo/Driver"
-	"backendgo/security"
 	"log"
 	"net/http"
 
@@ -28,7 +27,7 @@ func main() {
 	r.HandleFunc("/api/login", controllers.Login).Methods("POST")
 	r.HandleFunc("/api/logout", controllers.Logout).Methods("GET")
 	r.HandleFunc("/api/user/register", controllers.CreateUser).Methods("POST")
-	r.HandleFunc("/api/cookie", security.VerifyCookie).Methods("GET")
+	//r.HandleFunc("/api/cookie", security.VerifyCookie).Methods("GET")
 
 	//Para las comidas, deberemos hacer un get post  put y remove
 	r.HandleFunc("/api/meal/getall", controllers.AllMeals).Methods("GET")

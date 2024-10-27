@@ -2,6 +2,7 @@ package security
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -11,12 +12,12 @@ import (
 
 var secretKey = []byte("secret-key")
 
-func CreateToken(username string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
-		jwt.MapClaims{
-			"username": username,
-			"exp":      time.Now().Add(time.Hour * 2).Unix(),
-		})
+// CreateToken genera un JWT con un ID y una expiración de 2 horas.
+func CreateToken(id int) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":  id,
+		"exp": time.Now().Add(time.Hour * 2).Unix(),
+	})
 
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
@@ -26,7 +27,9 @@ func CreateToken(username string) (string, error) {
 	return tokenString, nil
 }
 
+// VerifyToken valida el JWT recibido.
 func VerifyToken(tokenString string) error {
+	// Eliminar el prefijo "Bearer " si existe
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
@@ -43,33 +46,43 @@ func VerifyToken(tokenString string) error {
 	return nil
 }
 
-func ExtractUser(tokenString string) (string, error) {
-
-	token, _, _ := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-
-		if username, ok := claims["username"].(string); ok {
-			return username, nil
-		}
-		return "", fmt.Errorf("username not found in token ")
+// ExtractID extrae el ID del usuario desde el JWT sin verificar su validez.
+func ExtractID(tokenString string) (int, error) {
+	token, _, err := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
+	if err != nil {
+		return 0, fmt.Errorf("error parsing token: %v", err)
 	}
 
-	return "", fmt.Errorf("invalid token claims")
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		if id, ok := claims["id"].(float64); ok {
+			return int(id), nil
+		}
+		return 0, fmt.Errorf("ID not found in token")
+	}
+
+	return 0, fmt.Errorf("invalid token claims")
 }
 
-func VerifyCookie(w http.ResponseWriter, r *http.Request) {
-
+// VerifyCookie verifica el JWT almacenado en una cookie llamada "jwt_token" y extrae el ID.
+func VerifyCookie(r *http.Request) (int, error) {
 	cookie, err := r.Cookie("jwt_token")
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		log.Printf("Error: Cookie not valid: %v\n", err)
+		return 0, err
 	}
 
 	jwtToken := cookie.Value
 
 	if err := VerifyToken(jwtToken); err != nil {
-		http.Error(w, "invalid token, good try hacker", http.StatusUnauthorized)
+		log.Printf("Error: Token invalid: %v\n", err)
+		return 0, err
 	}
-	w.WriteHeader(http.StatusOK)
+
+	// Extraer el ID del JWT después de la verificación
+	id, err := ExtractID(jwtToken)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }

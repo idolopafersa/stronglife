@@ -6,6 +6,7 @@ import (
 	"backendgo/security"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -18,25 +19,14 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	id, err := driver.PostRoutine(routine)
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error POST Routine driver: %s /n", err)
 		http.Error(w, "Error creating routine", http.StatusInternalServerError)
 		return
 	}
@@ -53,23 +43,14 @@ func GetRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
 	routine, err := driver.GetRoutine(id)
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error GET Routine driver: %s /n", err)
 		http.Error(w, "Routine not found", http.StatusNotFound)
 		return
 	}
@@ -86,24 +67,14 @@ func PutRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	errw := driver.PutRoutine(routine)
 	if errw != nil {
-		fmt.Println(errw)
+		log.Printf("Error PUT Routine driver: %s /n", err)
 		http.Error(w, "Error updating routine", http.StatusInternalServerError)
 		return
 	}
@@ -120,24 +91,15 @@ func DelRoutine(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
-	cookie, err := r.Cookie("token")
+
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	erre := driver.DelRoutine(id)
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error DEL Routine driver: %s /n", err)
 		http.Error(w, "routine not found", http.StatusNotFound)
 		return
 	}
@@ -145,25 +107,14 @@ func DelRoutine(w http.ResponseWriter, r *http.Request) {
 
 func AllRoutines(w http.ResponseWriter, r *http.Request) {
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	routines, erre := driver.GetAlRoutines()
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error GETALL  Routine driver: %s /n", err)
 		http.Error(w, "routine not found", http.StatusNotFound)
 		return
 	}

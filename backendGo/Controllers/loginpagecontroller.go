@@ -5,7 +5,7 @@ import (
 	structmodels "backendgo/StructModels"
 	"backendgo/security"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -15,13 +15,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
-		fmt.Print(err)
-		http.Error(w, "Body errors", http.StatusBadRequest)
+		log.Printf("Error Decoding Body in Login function: %s /n", err)
+		http.Error(w, "Error Decoding Body", http.StatusBadRequest)
 		return
 	}
 
 	if driver.UserExists(creds.Username) && driver.CorrectPassword(creds.Username, creds.Password) {
-		token, _ := security.CreateToken(creds.Username)
+		id, _ := driver.GetUserID(creds.Username)
+		token, _ := security.CreateToken(id)
 		//when a user sign in, they will receive a cookie to keep their JWT
 		cookie := http.Cookie{
 			Name:     "token",
@@ -34,7 +35,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, &cookie)
 
 	} else {
-		fmt.Print(err)
+		log.Printf("Error Login User afeter calling driver: %s /n", err)
 		http.Error(w, "User or password are wrong", http.StatusForbidden)
 	}
 
@@ -42,7 +43,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	cookie, _ := r.Cookie("token")
-
 	cookie.MaxAge = -1
 	cookie.Expires = time.Unix(0, 0)
 	cookie.Path = "/"

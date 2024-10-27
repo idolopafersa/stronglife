@@ -4,7 +4,7 @@ import (
 	driver "backendgo/Driver"
 	"backendgo/security"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -13,27 +13,14 @@ func Getday(w http.ResponseWriter, r *http.Request) {
 
 	date := r.URL.Query().Get("date")
 
-	cookie, err := r.Cookie("token")
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
-	name, _ := security.ExtractUser(jwtToken)
-	fmt.Print("username is" + name + "   ")
-	userID, _ := driver.GetUserID(name)
 
 	day, err := driver.GetDay(userID, date)
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error getting day driver: %s /n", err)
 		http.Error(w, "Could not get day", http.StatusInternalServerError)
 		return
 	}
@@ -46,28 +33,14 @@ func AddMealToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
 	mealID := r.URL.Query().Get("meal")
 
-	cookie, err := r.Cookie("token")
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
-
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
-
-	name, _ := security.ExtractUser(jwtToken)
-	userID, _ := driver.GetUserID(name)
 
 	erre := driver.AddMealToDay(date, strconv.Itoa(userID), mealID)
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error Adding Meal to Day day driver: %s /n", err)
 		http.Error(w, "Could not add meal to day", http.StatusInternalServerError)
 		return
 	}
@@ -81,26 +54,14 @@ func AddRoutineToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
 	routineID := r.URL.Query().Get("routine")
 
-	cookie, err := r.Cookie("token")
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
-	name, _ := security.ExtractUser(jwtToken)
-	userID, _ := driver.GetUserID(name)
 
 	erre := driver.AddRoutineToDay(date, strconv.Itoa(userID), routineID)
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error adding Routine to Day  driver: %s /n", err)
 		http.Error(w, "Could not add routine to day", http.StatusInternalServerError)
 		return
 	}
@@ -109,30 +70,19 @@ func AddRoutineToDay(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("routine added successfully")
 
 }
+
 func DelMealToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
 	mealID := r.URL.Query().Get("meal")
 
-	cookie, err := r.Cookie("token")
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
-
-	name, _ := security.ExtractUser(jwtToken)
-	userID, _ := driver.GetUserID(name)
 
 	erre := driver.DelMealToDay(date, strconv.Itoa(userID), mealID)
 	if erre != nil {
+		log.Printf("Error DEL meal to  day driver: %s /n", err)
 		http.Error(w, "Could not add meal to day", http.StatusInternalServerError)
 		return
 	}

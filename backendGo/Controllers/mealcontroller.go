@@ -3,7 +3,9 @@ package controllers
 import (
 	driver "backendgo/Driver"
 	structmodels "backendgo/StructModels"
-	"backendgo/security"
+	"log"
+
+	security "backendgo/security"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -16,26 +18,16 @@ func GetMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
-	cookie, err := r.Cookie("token")
+
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
-
-	fmt.Print(id)
 	meal, err := driver.GetMeal(id)
-	fmt.Print(err)
-	if err != nil {
 
+	if err != nil {
+		log.Printf("Error GET Meals driver: %s /n", err)
 		http.Error(w, "Meal not found", http.StatusNotFound)
 		return
 	}
@@ -53,23 +45,14 @@ func PostMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid payload", 400)
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	id, err := driver.PostMeal(nmeal)
 	if err != nil {
+		log.Printf("Error POST Meals driver: %s /n", err)
 		http.Error(w, "couldnt Post", http.StatusNotFound)
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -84,25 +67,14 @@ func DelMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
-	}
-
-	fmt.Print(id)
 
 	erre := driver.DelMeal(id)
 	if erre != nil {
+		log.Printf("Error DEL Meals driver: %s /n", erre)
 		http.Error(w, "No Meal", http.StatusNotFound)
 	}
 }
@@ -116,24 +88,14 @@ func PutMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	erre := driver.UpdateMeal(meal)
-	fmt.Print(err)
 	if erre != nil {
+		log.Printf("Error PUT Meals driver: %s /n", erre)
 		http.Error(w, "Error al actualizar la comida", http.StatusInternalServerError)
 		return
 	}
@@ -143,24 +105,14 @@ func PutMeal(w http.ResponseWriter, r *http.Request) {
 
 func AllMeals(w http.ResponseWriter, r *http.Request) {
 
-	cookie, err := r.Cookie("token")
+	_, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
-		return
-	}
-
-	// Extract the JWT from the cookie value
-	jwtToken := cookie.Value
-
-	if err := security.VerifyToken(jwtToken); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Invalid JWT", http.StatusForbidden)
-		return
+		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	meals, erre := driver.GetAllMeals()
 	if erre != nil {
-		fmt.Print(erre)
+		log.Printf("Error GET AllMeals driver: %s /n", erre)
 		http.Error(w, "meal not found", http.StatusNotFound)
 		return
 	}
