@@ -1,11 +1,16 @@
 import React,{useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {TouchableOpacity, Text, View, Button ,StyleSheet,Image} from 'react-native';
+import { Button } from 'react-native';
+import {TouchableOpacity, Text, View ,StyleSheet,Image, Animated} from 'react-native';
 import HelpScreen from '../components/HelpScreen.tsx';
 import HomeScreen from '../components/HomeScreen.tsx';
 import DetailsScreen from '../components/DetailsScreen.tsx';
+<<<<<<< Updated upstream
 import Widget from '../components/LittleComponents/Widget.tsx';
+=======
+import Calendar from '@/components/LittleComponents/Calendar.js';
+>>>>>>> Stashed changes
 
 
 
@@ -21,6 +26,7 @@ export function HelloWidgetPreviewScreen() {
   );
 }
 
+<<<<<<< Updated upstream
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -44,6 +50,9 @@ const forFade = ({ current, next }) => {
     backgroundStyle: { opacity },
   };
 };
+=======
+
+>>>>>>> Stashed changes
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -58,7 +67,7 @@ export default function App() {
                                       <Button
                                         onPress={() => alert('This is a button!')}
                                         title="Sing up"
-                                        color="tomato"
+                                        color="white"
                                       />
                                     ),
                           }}/>
@@ -70,7 +79,7 @@ export default function App() {
         name="Help" component={HelpScreen}
         options={{
                   headerTintColor: 'white',
-                  headerStyle: { backgroundColor: 'tomato' },headerStyleInterpolator: forFade}}
+                  headerStyle: { backgroundColor: 'tomato' }}}
          />
       </Stack.Navigator>
     </NavigationContainer>
