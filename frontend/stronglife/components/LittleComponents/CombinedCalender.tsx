@@ -50,7 +50,7 @@ const CombinedCalender = () => {
 
   return (
     <View style={styles.container}>
-      <Calendar
+      <Calendar style={styles.calendar}
         onDayPress={handleDayPress}
         markedDates={{
           ...Object.keys(completedDays).reduce((acc, date) => {
@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 8,
     color: 'orange',
+  },calendar:{
+    backgroundColor:'grey',
   },
   streakText: {
     fontSize: 20,
