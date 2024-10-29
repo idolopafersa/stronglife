@@ -3,12 +3,13 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Anothercalendar from './LittleComponents/Anothercalendar';
 import  Calendar  from './LittleComponents/Calendar';
 import LabelBottomNavigation from './LittleComponents/LabelBottomNavigation';
+import CalendarDEFI from './LittleComponents/CalendarDEF';
 const HelpScreen = () => {
   return (
     <View >
       <Anothercalendar/>
       <Calendar />
-      
+      <CalendarDEFI />
     </View>
   );
 };

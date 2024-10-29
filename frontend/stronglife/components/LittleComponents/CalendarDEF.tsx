@@ -5,8 +5,7 @@ import { StyleSheet } from 'react-native';
 import { Button } from 'react-native';
 import type {} from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers'
-import Weekdays from './Weekdays';
-import dayjs from 'dayjs';
+
 
 // Configurar el idioma en español si lo deseas
 LocaleConfig.locales['es'] = {
@@ -40,11 +39,13 @@ const CombinedCalendar = () => {
     return week;
   };
   const addWeek = (week: string[]) => {
-    const newweek = [...week];
+    const newweek = week;
     
     for (let i = 0; i < 7; i++) {
-      const d = dayjs(week[i]).add(1, 'week');
-      newweek[i] = d.toISOString().split('T')[0];
+      const d= new Date(week[i]);
+    d.setDate(d.getDate() + d.getDay() + 7);
+    d.toDateString();
+    newweek[i]= d.toISOString().split('T')[0];
     }
     return newweek;
   };
@@ -64,14 +65,14 @@ const CombinedCalendar = () => {
   };
 
   const calculateStreak = (completedDays: { [key: string]: boolean }) => {
-    const dayjs = Object.keys(completedDays).filter(dayjs => completedDays[dayjs]);
-    dayjs.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    const dates = Object.keys(completedDays).filter(date => completedDays[date]);
+    dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
     
     let maxStreak = 0;
     let currentStreak = 0;
     let previousDate: Date | null = null;
 
-    for (const dateString of dayjs) {
+    for (const dateString of dates) {
       const currentDate = new Date(dateString);
       if (
         previousDate &&
@@ -101,16 +102,16 @@ const CombinedCalendar = () => {
         }}
       />
       <View style={styles.streakContainer}>
-        <Text> {currentWeek.join(', ')}</Text>
-        <Text> Los dias completados {Object.keys(completedDays).join(', ').toString()}</Text>
         <Text style={styles.streakText}>Racha: {streak} días</Text>
-        <Weekdays week={currentWeek} diasCompletados={Object.keys(completedDays)} />
+        
       </View>
       <View>
-         <Button  title="-->" onPress={() => setCurrentWeek(addWeek(currentWeek))} />
+        {/* <Button onClick={addWeek(currentWeek)}> */}
+          {/* addWeek */}
+        {/* </Button> */}
         <Text>
         {/* currentWeek: {currentWeek.join(', ')} */}
-        Semana +1: {currentWeek.join(', ')}
+        Semana +1: {addWeek(currentWeek).join(', ')}
         </Text>
         
       </View>
