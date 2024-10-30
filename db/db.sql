@@ -1,9 +1,8 @@
-/*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19-11.5.2-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.19  Distrib 10.11.6-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: FitCalendar
 -- ------------------------------------------------------
--- Server version	11.5.2-MariaDB
+-- Server version	10.11.6-MariaDB-0+deb12u1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,7 +13,7 @@
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `DayMeals`
@@ -40,18 +39,14 @@ CREATE TABLE `DayMeals` (
 LOCK TABLES `DayMeals` WRITE;
 /*!40000 ALTER TABLE `DayMeals` DISABLE KEYS */;
 INSERT INTO `DayMeals` VALUES
-(60,8),
-(33,9),
-(38,9),
-(45,9),
-(50,10),
-(60,10),
-(33,11),
-(57,11),
-(38,12),
-(51,12),
-(48,13),
-(54,16);
+(67,7),
+(67,11),
+(78,7),
+(78,10),
+(79,8),
+(79,10),
+(97,9),
+(97,11);
 /*!40000 ALTER TABLE `DayMeals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +67,7 @@ CREATE TABLE `Days` (
   KEY `routine_id` (`routine_id`),
   CONSTRAINT `Days_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`),
   CONSTRAINT `Days_ibfk_3` FOREIGN KEY (`routine_id`) REFERENCES `Routines` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,34 +77,47 @@ CREATE TABLE `Days` (
 LOCK TABLES `Days` WRITE;
 /*!40000 ALTER TABLE `Days` DISABLE KEYS */;
 INSERT INTO `Days` VALUES
-(33,13,'2024-09-29',10),
-(34,13,'2024-09-27',NULL),
-(35,13,'2024-09-28',NULL),
-(36,13,'2024-09-18',NULL),
-(37,13,'2024-09-19',NULL),
-(38,18,'2024-09-29',11),
-(39,18,'2024-10-25',NULL),
-(40,18,'2024-10-24',NULL),
-(41,18,'2024-10-17',NULL),
-(42,18,'2024-09-13',NULL),
-(43,18,'2024-09-21',NULL),
-(44,18,'2024-09-01',NULL),
-(45,13,'2024-09-30',10),
-(46,13,'2024-09-25',NULL),
-(47,13,'2024-09-24',NULL),
-(48,13,'2024-09-17',10),
-(49,13,'2024-09-03',NULL),
-(50,13,'2024-09-09',13),
-(51,13,'2024-09-10',4),
-(52,13,'2024-09-11',NULL),
-(53,13,'2024-09-08',NULL),
-(54,13,'2024-10-03',10),
-(55,13,'2024-10-02',NULL),
-(56,13,'2024-10-10',NULL),
-(57,13,'2024-09-01',9),
-(58,13,'2024-09-22',NULL),
-(59,13,'2024-09-23',NULL),
-(60,13,'2024-10-15',10);
+(61,20,'2024-10-06',NULL),
+(62,20,'2024-10-03',NULL),
+(63,20,'2024-10-02',NULL),
+(64,25,'2024-10-06',10),
+(65,25,'2024-10-01',NULL),
+(66,21,'2024-10-06',NULL),
+(67,25,'2025-04-30',NULL),
+(68,25,'2024-10-08',NULL),
+(69,25,'2024-10-15',NULL),
+(70,25,'2024-10-05',NULL),
+(71,25,'2024-10-11',NULL),
+(72,25,'2024-10-13',NULL),
+(73,25,'2024-10-20',NULL),
+(74,25,'2025-02-02',NULL),
+(75,25,'2024-09-08',NULL),
+(76,25,'2024-09-01',NULL),
+(77,27,'2024-10-06',10),
+(78,28,'2024-10-06',13),
+(79,20,'2024-10-07',10),
+(80,25,'2024-10-07',NULL),
+(81,25,'2024-10-14',NULL),
+(82,25,'2024-10-27',NULL),
+(83,25,'2024-10-29',NULL),
+(84,25,'2024-10-30',NULL),
+(85,25,'2024-10-23',NULL),
+(86,25,'2024-10-16',NULL),
+(87,25,'2024-10-09',NULL),
+(88,25,'2024-10-02',NULL),
+(89,25,'2024-10-26',NULL),
+(90,25,'2024-10-28',NULL),
+(91,25,'2024-09-30',NULL),
+(92,21,'2024-10-07',NULL),
+(93,21,'2024-10-20',NULL),
+(94,21,'2024-10-13',NULL),
+(95,21,'2024-10-21',NULL),
+(96,21,'2024-10-22',NULL),
+(97,30,'2024-10-07',NULL),
+(98,21,'2024-10-08',NULL),
+(99,30,'2024-10-08',NULL),
+(100,30,'2024-10-15',NULL),
+(101,30,'2024-10-06',NULL);
 /*!40000 ALTER TABLE `Days` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +136,7 @@ CREATE TABLE `Exercises` (
   `description` text DEFAULT NULL,
   `photo_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,18 +148,16 @@ LOCK TABLES `Exercises` WRITE;
 INSERT INTO `Exercises` VALUES
 (6,'Push Ups',3,12,'A basic upper body exercise.','https://example.com/images/pushups.jpg'),
 (8,'Squat',4,12,'A fundamental lower body exercise.','http://example.com/squat.jpg'),
-(9,'SquatPutilla',4,12,'A fundamental lower body exercise.','http://example.com/squat.jpg'),
 (10,'Bench Press',3,10,'A strength training exercise that targets the chest, shoulders, and triceps.','https://example.com/photos/bench_press.jpg'),
 (11,'Deadlift',4,8,'A compound exercise that works the entire posterior chain.','https://example.com/photos/deadlift.jpg'),
 (12,'Squat',3,12,'A foundational exercise that targets the quadriceps, hamstrings, and glutes.','https://example.com/photos/squat.jpg'),
 (13,'Pull-Up',3,6,'An upper body exercise that targets the back and biceps.','https://example.com/photos/pull_up.jpg'),
-(14,'Lunges',3,10,'A lower body exercise that targets the legs and glutes.','https://example.com/photos/lunges.jpg'),
 (15,'Shoulder Press',4,10,'An exercise that targets the shoulders and triceps using a barbell or dumbbells.','https://example.com/photos/shoulder_press.jpg'),
 (16,'Plank',3,NULL,'A core strengthening exercise that involves holding a position similar to a push-up.','https://example.com/photos/plank.jpg'),
 (17,'Bicep Curl',3,12,'An isolation exercise that targets the biceps using dumbbells or a barbell.','https://example.com/photos/bicep_curl.jpg'),
-(18,'Tricep Dips',3,10,'An exercise that targets the triceps, performed using parallel bars or a bench.','https://example.com/photos/tricep_dips.jpg'),
+(18,'Tricep Dips',4,10,'An exercise that targets the triceps, performed using parallel bars or a bench.','https://example.com/photos/tricep_dips.jpg'),
 (19,'Leg Press',4,10,'A compound exercise that targets the quadriceps, hamstrings, and glutes using a leg press machine.','https://example.com/photos/leg_press.jpg'),
-(20,'Ejercicio de prueba 3',32,34,'Ejercicio de prueba 3','Ejercicio de prueba 3');
+(21,'Lunges',3,10,'A lower body exercise that targets the legs and glutes.','https://example.com/photos/lunges.jpg');
 /*!40000 ALTER TABLE `Exercises` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +179,7 @@ CREATE TABLE `Meals` (
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Meals_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +198,7 @@ INSERT INTO `Meals` VALUES
 (13,'Spicy chili made with ground turkey, beans, and tomatoes.',450,30,15,40,'https://example.com/photos/turkey_chili.jpg','Turkey Chili'),
 (14,'A refreshing smoothie bowl topped with fresh fruits and granola.',350,5,8,65,'https://example.com/photos/mango_smoothie_bowl.jpg','Mango Smoothie Bowl'),
 (16,'A rich and creamy protein shake with chocolate flavor.',250,30,5,20,'https://example.com/photos/chocolate_protein_shake.jpg','Chocolate Protein Shake'),
-(19,'Comidita Rica',2372,23,232,23232,'Es una rutina muy chula','Comida de prueba');
+(20,'',0,0,0,0,'','');
 /*!40000 ALTER TABLE `Meals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,7 +227,8 @@ LOCK TABLES `RoutineExercises` WRITE;
 /*!40000 ALTER TABLE `RoutineExercises` DISABLE KEYS */;
 INSERT INTO `RoutineExercises` VALUES
 (10,10),
-(10,11);
+(10,11),
+(11,6);
 /*!40000 ALTER TABLE `RoutineExercises` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,8 +255,6 @@ CREATE TABLE `Routines` (
 LOCK TABLES `Routines` WRITE;
 /*!40000 ALTER TABLE `Routines` DISABLE KEYS */;
 INSERT INTO `Routines` VALUES
-(4,'Cardio Blast cocomelon','High-intensity workout focusing on cardiovascular endurance.',''),
-(9,'Rutina de prueba 6','Hola caracola',''),
 (10,'Full Body Workout','A balanced routine targeting all major muscle groups.','https://example.com/photos/full_body_workout.jpg'),
 (11,'Upper Body Strength','Focuses on building strength in the chest, shoulders, and arms.','https://example.com/photos/upper_body_strength.jpg'),
 (12,'Lower Body Blast','A high-intensity routine designed to strengthen legs and glutes.','https://example.com/photos/lower_body_blast.jpg'),
@@ -271,7 +276,7 @@ CREATE TABLE `Users` (
   `email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,17 +286,21 @@ CREATE TABLE `Users` (
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` VALUES
-(8,'jose','$2a$10$Fs7LFhWGiHlNgBJRot4DGO3D4ArFIsrEcU7dRVLEfXP4VFWZPCpWa\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mauricio@gg'),
-(9,'jose2','$2a$10$5Yi51eGQtthg1XtjLRD/kuADTKXowiQ8C3PiYFvJaWt8a5osZl1jK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mauricio@gg'),
-(10,'jose22','$2a$10$lClctsr8Axn6b69zphgiRO97CbLQUo6Th6WfTGfpvpfpCWHrwvJKS\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mauricio@gg'),
-(11,'jose222','$2a$10$l72gb5h52nYOf.OPVDQCkOM5LqzTNa1IS.gV7wf2uq7FKnOjir8u.\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mauricio@gg'),
-(12,'front','$2a$10$Qk9bDFPIE4rdZ5.utuW.eOPbG3Wb.7qwsDDtBNM5ZLcPsDpkVlSwq\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mauricio@gg'),
-(13,'fr','$2a$10$UQifRZ/rafVJtX.c5AryNeLC7divaYZOIUAlIYgJ.mzbPadJJa4ja\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mauricio@gg'),
-(14,'Kalhan','$2a$10$upRHORx/p1xzmFFA3qrre.kCPa.k6E1RDe/64FWw/vJyAlbhYBQTK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','kalhan@gmail.com'),
-(15,'pepe','$2a$10$gOxKVmJZXCz.QXfSYOMHEu85RRP9nClxZUU6UpznnJFVQZ5PsYdpm\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','cruasan'),
-(16,'miguel','$2a$10$An3Atq6wqdn5cqT7RCCkte4Soh8X5IEh.2LUR9X5WlPKEplivO2XW\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','fernandez@gmail.com'),
-(17,'migensio','$2a$10$sb77RqEHjjKsjq.rxU6.CuHQmdOmOWGYKZVouG9XLu6QWOY2qLbWS\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ddd'),
-(18,'TheScouting','$2a$10$cb.frunIU6.UeaDH6lwj0exDDU3BKeWOQiWBrv.ON2uiiScyPyB0O\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','askdjalks');
+(19,'pablo','$2a$10$J86alRXHBnxbWDyJoAjOT.xrxNuc8eVB9Gn/kx8o8JdxCG1nRMw2y\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','pafersa2003@gmail.com'),
+(20,'pablo2','$2a$10$84wLB.yPaoVnF/Wonw1A.Oq62FHdTLl1mCAK71ux/PpHHfVCXpH2i\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ddd'),
+(21,'Salvador','$2a$10$dYWw5lbuw1m5IdpDPuQV4e21zvz0xw.mNrJ7YlkV6etwXxm9sny8W\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','salva_ov@hotmail.com'),
+(22,'Jua nca','$2a$10$CVmDt4TbizAO9pizhp9NKuf2nYd8aJiXPT8kO83i2wgzCblT3Grx6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','juanca@gmail.com'),
+(23,'Pabloeldemon','$2a$10$azk3glsm8N28N.b0iedJ5.n2uhFoNjzMSCspMScSOmToI8qJzsuzW\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','lastetasdetriviño@gmail.com'),
+(24,'Lastetasdetriviño','$2a$10$Etl3A2fyyx0P.d1/UNvKQ.PUpE39Ns4GpplXi4fXscl6mB4pZFajW\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','pablopafersa'),
+(25,'123','$2a$10$uxIzvGXp6Tq008At6Vv3uOOywtfI6tquqOAy09crYs1K.j3jN5.QS\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','123'),
+(26,'Pacocraisy','$2a$10$UAyEO7PF/1nSM8L6IVNBvuieAlFMXLXuv1HSwGP4QTK9aRTtn0Mty\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','pacopacman'),
+(27,'Mifersa','$2a$10$ngRXxS66ELQkH2jqbjHKZO4db/VxlluX6EUrZ05vmBW8VN.wP6gN.\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','mifersa2007@gmail.com'),
+(28,'Pacoputo','$2a$10$8xbnuXzd3/L0oOKaVsRIS.f5aMSrRCkicRpSHoYUrAKJwIoIDWTk2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','pacopelo2003@gmail.com'),
+(29,'Jdjdj','$2a$10$xZ4SLjvKQIpGLuZTpEwGs.uGR5LtCXcoKLlvwz0cU1PVpN2MPhZ7y\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','jjzjd@gmail.som'),
+(30,'jose','$2a$10$95OrfEs4T7FfyRE6H4u66ueGE/YROGeS0AHyBLwxekt03Anz/IY6S\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','jose'),
+(31,'jose2','$2a$10$NZbAgO.qQAgrxnMvcf3HFuGpVWOeLOR2Z1QXHhP7xFqCobsybZJP.\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','jose2@jose.com'),
+(32,'Chuuuchooo','$2a$10$EQdlkHJNU3lHM89Da3csBeoFi/quA7gWC9ik8cpUFK0XBJySsrbcy\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','kali.n.moylan@gmail.com'),
+(33,'Chucho','$2a$10$cOClrrPAy4ATpd8YuwnYS.6FG/CFY1NE5Dv314KAmkLh5wVjfTE1y\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','kali.n.moylan@gmail.com');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -302,6 +311,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-04  9:54:05
+-- Dump completed on 2024-10-19 12:14:09

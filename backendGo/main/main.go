@@ -35,6 +35,8 @@ func main() {
 	r.HandleFunc("/api/meal/post", controllers.PostMeal).Methods("POST")
 	r.HandleFunc("/api/meal/del", controllers.DelMeal).Methods("DELETE")
 	r.HandleFunc("/api/meal/put", controllers.PutMeal).Methods("PUT")
+	r.HandleFunc("/api/meal/uploadimage", controllers.UploadMealImage).Methods("POST")
+	r.HandleFunc("/api/meal/getimage", controllers.GetMealImage).Methods("GET")
 
 	//Para las rutinas, get post put
 	r.HandleFunc("/api/routine/get", controllers.GetRoutine).Methods("GET")
@@ -42,6 +44,8 @@ func main() {
 	r.HandleFunc("/api/routine/del", controllers.DelRoutine).Methods("DELETE")
 	r.HandleFunc("/api/routine/put", controllers.PutRoutine).Methods("PUT")
 	r.HandleFunc("/api/routine/getall", controllers.AllRoutines).Methods("GET")
+	r.HandleFunc("/api/routine/uploadimage", controllers.UploadRoutineImage).Methods("POST")
+	r.HandleFunc("/api/routine/getimage", controllers.GetRoutineImage).Methods("GET")
 
 	//Para los ejercicios, get post put
 	r.HandleFunc("/api/exercise/get", controllers.GetExercise).Methods("GET")
@@ -49,6 +53,9 @@ func main() {
 	r.HandleFunc("/api/exercise/del", controllers.DelExercise).Methods("DELETE")
 	r.HandleFunc("/api/exercise/put", controllers.PutExercise).Methods("PUT")
 	r.HandleFunc("/api/exercise/getall", controllers.GetAlExercises).Methods("GET")
+	r.HandleFunc("/api/exercise/uploadimage", controllers.UploadExerciseImage).Methods("POST")
+	r.HandleFunc("/api/routine/getimage", controllers.GetExerciseImage).Methods("GET")
+
 	//add,remove and get exercises of a routine
 
 	r.HandleFunc("/api/exercises/routines/get", controllers.GetrExercises).Methods("GET")
