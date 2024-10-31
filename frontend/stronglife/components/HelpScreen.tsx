@@ -3,23 +3,19 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 const HelpScreen = () => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Pantalla de Ayuda</Text>
-      <Text style={styles.subtitle}>¿Cómo puedo ayudarte?</Text>
-      <Text style={styles.question}>1. ¿Cómo uso la aplicación?</Text>
-      <Text style={styles.answer}>
-        La aplicación te permite gestionar tus entrenamientos y rutinas.
-      </Text>
-      <Text style={styles.question}>2. ¿Cómo puedo crear una cuenta?</Text>
-      <Text style={styles.answer}>
-        Puedes crear una cuenta haciendo clic en el botón de registro en la pantalla de inicio.
-      </Text>
-      <Text style={styles.question}>3. ¿Dónde puedo encontrar más información?</Text>
-      <Text style={styles.answer}>
-        Puedes visitar nuestra página web o contactar con nuestro soporte.
-      </Text>
-      {/* Agrega más preguntas y respuestas según sea necesario */}
-    </ScrollView>
+  <View style={styles.container}>
+    <Text style={styles.title}>Ayuda</Text>
+    
+      <Text style={styles.subtitle}>¿Cómo se usa esta app?</Text>
+      <Text style={styles.question}>¿Qué es un hábito?</Text>
+      <Text style={styles.answer}>Un hábito es una acción que se repite de forma regular y automática.</Text>
+      <Text style={styles.question}>¿Cómo se crea un hábito?</Text>
+      <Text style={styles.answer}>Para crear un hábito, simplemente selecciona la opción "Crear hábito" en la pantalla principal e introduce el nombre del hábito que deseas crear.</Text>
+      <Text style={styles.question}>¿Cómo se marca un hábito como completado?</Text>
+      <Text style={styles.answer}>Para marcar un hábito como completado, simplemente selecciona el día correspondiente en el calendario.</Text>
+      <Text style={styles.question}>¿Cómo se elimina un hábito?</Text>
+      <Text style={styles.answer}>Para eliminar un hábito, selecciona la opción "Eliminar hábito" en la pantalla principal y selecciona el hábito que deseas eliminar.</Text>
+    </View>
   );
 };
 

@@ -10,22 +10,6 @@ import DetailsScreen from '../components/DetailsScreen.tsx';
 
 
 
-const forFade = ({ current, next }) => {
-  const opacity = Animated.add(
-    current.progress,
-    next ? next.progress : 0
-  ).interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: [0, 1, 0],
-  });
-
-  return {
-    leftButtonStyle: { opacity },
-    rightButtonStyle: { opacity },
-    titleStyle: { opacity },
-    backgroundStyle: { opacity },
-  };
-};
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -52,7 +36,7 @@ export default function App() {
         name="Help" component={HelpScreen}
         options={{
                   headerTintColor: 'white',
-                  headerStyle: { backgroundColor: 'tomato' },headerStyleInterpolator: forFade}}
+                  headerStyle: { backgroundColor: 'tomato' }}}
          />
       </Stack.Navigator>
     </NavigationContainer>
