@@ -4,12 +4,11 @@ import Anothercalendar from './LittleComponents/Anothercalendar';
 import  Calendar  from './LittleComponents/Calendar';
 import LabelBottomNavigation from './LittleComponents/LabelBottomNavigation';
 import CalendarDEFI from './LittleComponents/CalendarDEF';
+import FinalCalendar from './LittleComponents/FinalCalendar';
 const HelpScreen = () => {
   return (
     <View >
-      <Anothercalendar/>
-      <Calendar />
-      <CalendarDEFI />
+      <FinalCalendar/>
     </View>
   );
 };

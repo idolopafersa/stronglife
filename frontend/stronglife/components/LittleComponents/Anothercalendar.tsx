@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-const daysOfWeek = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+import CheckIcon from 'react-native-vector-icons/MaterialIcons'; // Asegúrate de instalar react-native-vector-icons
+const daysOfWeek = ['LU', 'MA', 'MI', 'JU', 'VI', 'SÁ', 'DO'];
 
-const Anothercalendar: React.FC = () => {
+const AnotherCalendar: React.FC = () => {
   const [completedDays, setCompletedDays] = useState<boolean[]>(Array(7).fill(false));
+  const [currentDayIndex, setCurrentDayIndex] = useState<number>(3); // Cambia esto según el día actual (0 para lunes, 6 para domingo)
   const [streak, setStreak] = useState<number>(0);
 
   const calculateStreak = (updatedCompletedDays: boolean[]) => {
@@ -39,13 +40,19 @@ const Anothercalendar: React.FC = () => {
           onPress={() => handleDayPress(index)}
           style={[
             styles.dayContainer,
+            index === currentDayIndex ? styles.currentDay : {},
             completedDays[index] ? styles.completed : styles.notCompleted,
           ]}
         >
-          <Text style={styles.dayText}>{day}</Text>
+          <Text style={[styles.dayText, completedDays[index] ? styles.completedText : styles.notCompletedText]}>
+            {day}
+          </Text>
+          {completedDays[index] && (
+            <CheckIcon name="check" size={15} color="white" style={styles.checkIcon} />
+          )}
         </TouchableOpacity>
       ))}
-      <Text style={styles.streakText}>{streak} </Text>
+      <Text style={styles.streakText}>Racha: {streak} días</Text>
     </View>
   );
 };
@@ -58,28 +65,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dayContainer: {
-    padding: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: 'black',
+    width: 40,
+    height: 60,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  currentDay: {
+    backgroundColor: '#FF8C00', // Color naranja para el día actual
   },
   completed: {
-    backgroundColor: 'green',
+    backgroundColor: '#00C781', // Color verde para días completados
   },
   notCompleted: {
-    backgroundColor: 'darkgrey',
+    backgroundColor: '#F5F5F5', // Fondo gris claro para días no completados
+    borderWidth: 1,
+    borderColor: '#D3D3D3', // Borde gris claro
   },
   dayText: {
-    color: 'white',
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: 'bold',
+  },
+  completedText: {
+    color: 'white',
+  },
+  notCompletedText: {
+    color: 'black',
+  },
+  checkIcon: {
+    position: 'absolute',
+    bottom: 5,
   },
   streakText: {
     marginTop: 20,
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
-    padding: 10,
+    color: 'black',
   },
 });
 
-export default Anothercalendar;
+export default AnotherCalendar;
