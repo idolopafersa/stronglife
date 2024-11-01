@@ -3,11 +3,6 @@ package driver
 import (
 	structmodels "backendgo/StructModels"
 	"fmt"
-	"io"
-	"log"
-	"mime/multipart"
-	"os"
-	"path/filepath"
 )
 
 func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
@@ -79,29 +74,4 @@ func GetAlRoutines() ([]structmodels.Routine, error) {
 	}
 
 	return routines, nil
-}
-func UploadRoutineImage(id string, path string, file multipart.File) error {
-
-	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
-		return err
-	}
-
-	dstFile, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer dstFile.Close()
-
-	if _, err := io.Copy(dstFile, file); err != nil {
-		return err
-	}
-
-	query := "UPDATE Routines SET photo_url = ? WHERE id = ?"
-	_, erro := db.Exec(query, path, id)
-	if erro != nil {
-		log.Printf("error saving Routine path in db : %s", erro)
-		return erro
-	}
-	return nil
 }

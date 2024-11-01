@@ -4,12 +4,40 @@ import (
 	driver "backendgo/Driver"
 	"fmt"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
+	"strings"
+
+	"github.com/gabriel-vasile/mimetype"
 )
 
-func UploadMealImage(w http.ResponseWriter, r *http.Request) {
+// CheckSize limita el tamaño del archivo a 100 KB
+func CheckSize(w http.ResponseWriter, r *http.Request) error {
+	r.Body = http.MaxBytesReader(w, r.Body, 100*1024)
 
+	err := r.ParseMultipartForm(100 * 1024)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CheckImageType verifica que el archivo sea de tipo imagen
+func CheckImageType(file multipart.File) error {
+	mtype, err := mimetype.DetectReader(file)
+	if err != nil {
+		return fmt.Errorf("error detecting file type: %w", err)
+	}
+
+	if !strings.HasPrefix(mtype.String(), "image/") {
+		return fmt.Errorf("file type not supported: %s", mtype.String())
+	}
+
+	return nil
+}
+
+func UploadMealImage(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
@@ -17,13 +45,9 @@ func UploadMealImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*_, err := security.VerifyCookie(r)
+	err := CheckSize(w, r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
-	}
-	*/
-	erro := r.ParseMultipartForm(10 << 20) // Limit Photo to 10mb
-	if erro != nil {
+		log.Printf("Error Uploading image, max size: %s", err)
 		http.Error(w, "File too big", http.StatusBadRequest)
 		return
 	}
@@ -36,24 +60,32 @@ func UploadMealImage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	filepath := fmt.Sprintf("./assets/meals/meal-%s", id)
-
-	erre := driver.UploadMealImage(id, filepath, file)
-	if erre != nil {
-		log.Printf("Error Uploading Meal image driver: %s /n", erre)
-		http.Error(w, "couldnt upload image", http.StatusNotFound)
+	if err := CheckImageType(file); err != nil {
+		log.Printf("Error uploading Meal image: %s", err)
+		http.Error(w, "Invalid image type", http.StatusUnsupportedMediaType)
 		return
 	}
 
+	filepath := fmt.Sprintf("./assets/meals/meal-%s.jpg", id)
+
+	if err := driver.UploadMealImage(id, filepath, file); err != nil {
+		log.Printf("Error Uploading Meal image driver: %s", err)
+		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Image uploaded and converted to JPEG successfully"))
 }
 
+// GetMealImage obtiene la imagen de la comida
 func GetMealImage(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if id == "" {
 		http.Error(w, "meal ID is required", http.StatusBadRequest)
 		return
 	}
-	path := fmt.Sprintf("./assets/meals/meal-%s", id)
+	path := fmt.Sprintf("./assets/meals/meal-%s.jpg", id) // Asegúrate de que el sufijo sea .jpg
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		log.Printf("Error getting Meal Image: %s", err)
@@ -61,13 +93,13 @@ func GetMealImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Serve the file as an image
-	w.Header().Set("Content-Type", "image/png") // or "image/png" based on your files
+	// Servir el archivo como una imagen
+	w.Header().Set("Content-Type", "image/jpeg") // Cambiar a "image/jpeg"
 	http.ServeFile(w, r, path)
 }
 
+// UploadExerciseImage carga la imagen de ejercicio
 func UploadExerciseImage(w http.ResponseWriter, r *http.Request) {
-
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
@@ -75,13 +107,9 @@ func UploadExerciseImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*_, err := security.VerifyCookie(r)
+	err := CheckSize(w, r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
-	}
-	*/
-	erro := r.ParseMultipartForm(10 << 20) // Limit Photo to 10mb
-	if erro != nil {
+		log.Printf("Error Uploading image, max size: %s", err)
 		http.Error(w, "File too big", http.StatusBadRequest)
 		return
 	}
@@ -94,24 +122,32 @@ func UploadExerciseImage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	filepath := fmt.Sprintf("./assets/exercises/exercise-%s", id)
-
-	erre := driver.UploadExerciseImage(id, filepath, file)
-	if erre != nil {
-		log.Printf("Error Uploading Exercise image driver: %s /n", erre)
-		http.Error(w, "couldnt upload image", http.StatusNotFound)
+	if err := CheckImageType(file); err != nil {
+		log.Printf("Error uploading Exercise image: %s", err)
+		http.Error(w, "Invalid image type", http.StatusUnsupportedMediaType)
 		return
 	}
 
+	filepath := fmt.Sprintf("./assets/exercises/exercise-%s.jpg", id)
+
+	if err := driver.UploadExerciseImage(id, filepath, file); err != nil {
+		log.Printf("Error Uploading Exercise image driver: %s", err)
+		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Exercise image uploaded successfully"))
 }
 
+// GetExerciseImage obtiene la imagen de ejercicio
 func GetExerciseImage(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		http.Error(w, " ID is required", http.StatusBadRequest)
+		http.Error(w, "ID is required", http.StatusBadRequest)
 		return
 	}
-	path := fmt.Sprintf("./assets/exercises/exercise-%s", id)
+	path := fmt.Sprintf("./assets/exercises/exercise-%s.jpg", id)
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		log.Printf("Error getting Exercise Image: %s", err)
@@ -119,13 +155,13 @@ func GetExerciseImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Serve the file as an image
-	w.Header().Set("Content-Type", "image/png") // or "image/png" based on your files
+	// Servir el archivo como una imagen
+	w.Header().Set("Content-Type", "image/jpeg") // Cambiar a "image/jpeg"
 	http.ServeFile(w, r, path)
 }
 
+// UploadRoutineImage carga la imagen de rutina
 func UploadRoutineImage(w http.ResponseWriter, r *http.Request) {
-
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
@@ -133,13 +169,9 @@ func UploadRoutineImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*_, err := security.VerifyCookie(r)
+	err := CheckSize(w, r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
-	}
-	*/
-	erro := r.ParseMultipartForm(10 << 20) // Limit Photo to 10mb
-	if erro != nil {
+		log.Printf("Error Uploading image, max size: %s", err)
 		http.Error(w, "File too big", http.StatusBadRequest)
 		return
 	}
@@ -152,24 +184,32 @@ func UploadRoutineImage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	filepath := fmt.Sprintf("./assets/routines/routine-%s", id)
-
-	erre := driver.UploadRoutineImage(id, filepath, file)
-	if erre != nil {
-		log.Printf("Error Uploading Routine image driver: %s /n", erre)
-		http.Error(w, "couldnt upload image", http.StatusNotFound)
+	if err := CheckImageType(file); err != nil {
+		log.Printf("Error uploading Routine image: %s", err)
+		http.Error(w, "Invalid image type", http.StatusUnsupportedMediaType)
 		return
 	}
 
+	filepath := fmt.Sprintf("./assets/routines/routine-%s.jpg", id)
+
+	if err := driver.UploadRoutineImage(id, filepath, file); err != nil {
+		log.Printf("Error Uploading Routine image driver: %s", err)
+		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Routine image uploaded successfully"))
 }
 
+// GetRoutineImage obtiene la imagen de rutina
 func GetRoutineImage(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		http.Error(w, " ID is required", http.StatusBadRequest)
+		http.Error(w, "ID is required", http.StatusBadRequest)
 		return
 	}
-	path := fmt.Sprintf("./assets/routines/routine-%s", id)
+	path := fmt.Sprintf("./assets/routines/routine-%s.jpg", id)
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		log.Printf("Error getting Routine Image: %s", err)
@@ -177,7 +217,7 @@ func GetRoutineImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Serve the file as an image
-	w.Header().Set("Content-Type", "image/png") // or "image/png" based on your files
+	// Servir el archivo como una imagen
+	w.Header().Set("Content-Type", "image/jpeg") // Cambiar a "image/jpeg"
 	http.ServeFile(w, r, path)
 }
