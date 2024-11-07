@@ -15,19 +15,9 @@ function HomeScreen({ navigation }) {
     <View style={{  alignItems: 'center', justifyContent: 'center' }}>
       
       <Text>Pantalla de Inicio</Text>
-      <TouchableOpacity
-              style={estilos.button} 
-              onPress={() => navigation.navigate('Details')}
-            >
-              <Text style={estilos.button}>Ir a Detalles</Text>
-            </TouchableOpacity>
- <TouchableOpacity style={estilos.button} 
-              onPress={() => navigation.navigate('Help')}
-            >
-               <Text style={estilos.button}>Ayuda</Text>
-            </TouchableOpacity>
+      
 
-
+    
     </View>
     </View>
   );

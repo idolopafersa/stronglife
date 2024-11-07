@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers'
 import dayjs from 'dayjs';
 import CheckIcon from 'react-native-vector-icons/MaterialIcons'; 
 import Arrow from 'react-native-vector-icons/MaterialIcons'; 
-import Star from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/FontAwesome5"
 import 'dayjs/locale/es'; 
 
 dayjs.locale('es');
@@ -126,9 +126,8 @@ const calculateStreak = (completedDays: { [key: string]: boolean }) => {
         </TouchableOpacity>
       ))}
       </View>
-      <View>
-      <Text style={styles.streakText}>Racha: {streak} días</Text>
-      <Star/>
+    <View>
+      <Text style={styles.streakText}>Racha: {streak} días {streak >= 3 && <Icon name="fire"  color="tomato" />}</Text>
     </View>
     </View>
   );
