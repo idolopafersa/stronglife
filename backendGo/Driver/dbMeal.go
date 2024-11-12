@@ -3,11 +3,6 @@ package driver
 import (
 	structmodels "backendgo/StructModels"
 	"fmt"
-	"io"
-	"log"
-	"mime/multipart"
-	"os"
-	"path/filepath"
 )
 
 func GetMeal(id string) (structmodels.Meal, error) {
@@ -78,30 +73,4 @@ func GetAllMeals() ([]structmodels.Meal, error) {
 	}
 
 	return meals, nil
-}
-
-func UploadMealImage(id string, path string, file multipart.File) error {
-
-	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
-		return err
-	}
-
-	dstFile, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer dstFile.Close()
-
-	if _, err := io.Copy(dstFile, file); err != nil {
-		return err
-	}
-
-	query := "UPDATE Meals SET photo_url = ? WHERE id = ?"
-	_, erro := db.Exec(query, path, id)
-	if erro != nil {
-		log.Printf("error saving meal path in db : %s", erro)
-		return erro
-	}
-	return nil
 }

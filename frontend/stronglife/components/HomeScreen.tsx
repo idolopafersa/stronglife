@@ -2,29 +2,23 @@ import React,{useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {TouchableOpacity, Text, View, Button ,StyleSheet,Image} from 'react-native';
+import Calendar from './LittleComponents/Calendar';
 
 function HomeScreen({ navigation }) {
     const [showGif, setShowGif] = useState(false);
   return (
 
-
-
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-
+    <View>
+    <View>
+      <Calendar/>
+      </View>
+    <View style={{  alignItems: 'center', justifyContent: 'center' }}>
+      
       <Text>Pantalla de Inicio</Text>
-      <TouchableOpacity
-              style={estilos.button} // Estilos personalizados
-              onPress={() => navigation.navigate('Details')}
-            >
-              <Text style={estilos.buttonText}>Ir a Detalles</Text>
-            </TouchableOpacity>
- <TouchableOpacity style={estilos.button} // Estilos personalizados
-              onPress={() => navigation.navigate('Help')}
-            >
-               <Text style={estilos.buttonText}>Ayuda</Text>
-            </TouchableOpacity>
+      
 
-
+    
+    </View>
     </View>
   );
 }
@@ -42,10 +36,6 @@ const estilos = StyleSheet.create({
   container:{
       flex: 1,
       },
-   gif: {
-      width: 200,
-      height: 200,
-      marginVertical: 20,
-    },
+   
 });
 export default HomeScreen;
