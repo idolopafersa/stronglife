@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {TouchableOpacity, Text, View, Button ,StyleSheet,Image} from 'react-native';
 import Calendar from './LittleComponents/Calendar';
+import CustomButton from './LittleComponents/CustomButton';
 
 function HomeScreen({ navigation }) {
     const [showGif, setShowGif] = useState(false);
@@ -15,7 +16,11 @@ function HomeScreen({ navigation }) {
     <View style={{  alignItems: 'center', justifyContent: 'center' }}>
       
       <Text>Pantalla de Inicio</Text>
-      
+      <CustomButton
+        title = "homero chino"
+        handlePress={() => {}}
+        
+        />
 
     
     </View>

@@ -6,6 +6,7 @@ import HelpScreen from '../components/HelpScreen';
 import HomeScreen from '../components/HomeScreen';
 import DetailsScreen from '../components/DetailsScreen';
 import Icon from "react-native-vector-icons/FontAwesome5"
+import Onboarding from '@/app/Onboarding';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +17,7 @@ export default function App() {
       screenOptions={{
         animation: 'fade',
       }}>
+        
         <Tab.Screen 
           name="Home" 
           component={HomeScreen}
@@ -47,6 +49,7 @@ export default function App() {
             headerStyle: { backgroundColor: 'tomato' },
           }}
         />
+
       </Tab.Navigator>
     </NavigationContainer>
   );
