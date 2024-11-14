@@ -7,7 +7,6 @@ type NewMeal struct {
 	Proteins    float64 `json:"proteins"`
 	Fats        float64 `json:"fats"`
 	Carbs       float64 `json:"carbs"`
-	PhotoURL    *string `json:"photo_url"`
 }
 type Meal struct {
 	ID int `json:"id"`

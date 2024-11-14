@@ -28,7 +28,7 @@ func GetExercisesInRoutine(routineID string) ([]structmodels.Exercise, error) {
 	var exercises []structmodels.Exercise
 	for rows.Next() {
 		var exercise structmodels.Exercise
-		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Sets, &exercise.Repetitions, &exercise.Description, &exercise.PhotoURL); err != nil {
+		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Description); err != nil {
 			return nil, err
 		}
 		exercises = append(exercises, exercise)

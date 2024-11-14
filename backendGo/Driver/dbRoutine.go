@@ -6,8 +6,8 @@ import (
 )
 
 func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
-	query := "INSERT INTO Routines (name, description, photo_url) VALUES (?, ?, ?)"
-	result, err := db.Exec(query, newRoutine.Name, newRoutine.Description, newRoutine.PhotoURL)
+	query := "INSERT INTO Routines (name, description) VALUES (?, ?, ?)"
+	result, err := db.Exec(query, newRoutine.Name, newRoutine.Description)
 
 	if err != nil {
 		fmt.Println("Error creating new routine:", err)
@@ -20,8 +20,8 @@ func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
 }
 
 func PutRoutine(routine structmodels.Routine) error {
-	query := `UPDATE Routines SET name = ?, description = ?, photo_url = ? WHERE id = ?`
-	_, err := db.Exec(query, routine.Name, routine.Description, routine.PhotoURL, routine.ID)
+	query := `UPDATE Routines SET name = ?, description = ?,  WHERE id = ?`
+	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID)
 	if err != nil {
 		fmt.Println("Error updating routine:", err)
 		return err
@@ -31,8 +31,8 @@ func PutRoutine(routine structmodels.Routine) error {
 
 func GetRoutine(id string) (structmodels.Routine, error) {
 	var routine structmodels.Routine
-	query := "SELECT id, name, description, photo_url FROM Routines WHERE id = ?"
-	err := db.QueryRow(query, id).Scan(&routine.ID, &routine.Name, &routine.Description, &routine.PhotoURL)
+	query := "SELECT id, name, description FROM Routines WHERE id = ?"
+	err := db.QueryRow(query, id).Scan(&routine.ID, &routine.Name, &routine.Description)
 	if err != nil {
 		fmt.Println("Error getting routine:", err)
 		return routine, err
@@ -67,7 +67,7 @@ func GetAlRoutines() ([]structmodels.Routine, error) {
 
 	for rows.Next() {
 		var routine structmodels.Routine
-		if err := rows.Scan(&routine.ID, &routine.Name, &routine.Description, &routine.PhotoURL); err != nil {
+		if err := rows.Scan(&routine.ID, &routine.Name, &routine.Description); err != nil {
 			return nil, err
 		}
 		routines = append(routines, routine)
