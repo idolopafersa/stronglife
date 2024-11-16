@@ -68,7 +68,7 @@ func UploadMealImage(w http.ResponseWriter, r *http.Request) {
 
 	filepath := fmt.Sprintf("./assets/meals/meal-%s.jpg", id)
 
-	if err := driver.UploadMealImage(id, filepath, file); err != nil {
+	if err := driver.UploadImage(id, filepath, file); err != nil {
 		log.Printf("Error Uploading Meal image driver: %s", err)
 		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
 		return
@@ -130,7 +130,7 @@ func UploadExerciseImage(w http.ResponseWriter, r *http.Request) {
 
 	filepath := fmt.Sprintf("./assets/exercises/exercise-%s.jpg", id)
 
-	if err := driver.UploadExerciseImage(id, filepath, file); err != nil {
+	if err := driver.UploadImage(id, filepath, file); err != nil {
 		log.Printf("Error Uploading Exercise image driver: %s", err)
 		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
 		return
@@ -192,7 +192,7 @@ func UploadRoutineImage(w http.ResponseWriter, r *http.Request) {
 
 	filepath := fmt.Sprintf("./assets/routines/routine-%s.jpg", id)
 
-	if err := driver.UploadRoutineImage(id, filepath, file); err != nil {
+	if err := driver.UploadImage(id, filepath, file); err != nil {
 		log.Printf("Error Uploading Routine image driver: %s", err)
 		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
 		return

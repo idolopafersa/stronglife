@@ -19,7 +19,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if driver.UserExists(user.Username) {
 		log.Printf("Error Creating User, Username already exists:  /n")
-		http.Error(w, "User already exists", 409)
+		http.Error(w, "User already exists", http.StatusConflict)
 		return
 	}
 

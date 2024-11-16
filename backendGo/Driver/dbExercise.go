@@ -10,14 +10,14 @@ func GetExercise(id string) (structmodels.Exercise, error) {
 	fmt.Print(id)
 	query := "SELECT * FROM Exercises WHERE id = ?"
 
-	err := db.QueryRow(query, id).Scan(&resul.ID, &resul.Name, &resul.Sets, &resul.Repetitions, &resul.Description, &resul.PhotoURL)
+	err := db.QueryRow(query, id).Scan(&resul.ID, &resul.Name, &resul.Description)
 	return resul, err
 }
 
 func PostExercise(nexercise structmodels.NewExercise) (int, error) {
 
-	query := "INSERT INTO Exercises ( name, sets, repetitions, description, photo_url) VALUES ( ?, ?, ?, ?, ?)"
-	result, err := db.Exec(query, nexercise.Name, nexercise.Sets, nexercise.Repetitions, nexercise.Description, nexercise.PhotoURL)
+	query := "INSERT INTO Exercises ( name, description) VALUES ( ?, ?)"
+	result, err := db.Exec(query, nexercise.Name, nexercise.Description)
 
 	if err != nil {
 		fmt.Print(err)
@@ -37,8 +37,8 @@ func DelExercise(id string) error {
 }
 
 func PutExercise(newexercise structmodels.Exercise) error {
-	query := `UPDATE Exercises SET name = ?, description = ?, sets = ?, repetitions = ?, photo_url = ? WHERE id = ?`
-	res, err := db.Exec(query, newexercise.Name, newexercise.Description, newexercise.Sets, newexercise.Repetitions, newexercise.PhotoURL, newexercise.ID)
+	query := `UPDATE Exercises SET name = ?, description = ? WHERE id = ?`
+	res, err := db.Exec(query, newexercise.Name, newexercise.Description, newexercise.ID)
 	if err != nil {
 		fmt.Printf("Error executing query: %v\n", err)
 		return err
@@ -64,7 +64,7 @@ func GetAlExercises() ([]structmodels.Exercise, error) {
 
 	for rows.Next() {
 		var exercise structmodels.Exercise
-		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Sets, &exercise.Repetitions, &exercise.Description, &exercise.PhotoURL); err != nil {
+		if err := rows.Scan(&exercise.ID, &exercise.Name); err != nil {
 			return nil, err
 		}
 		exercises = append(exercises, exercise)

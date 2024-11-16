@@ -48,46 +48,11 @@ func convertImage(path string, file multipart.File) error {
 	return nil
 }
 
-func UploadMealImage(id string, path string, file multipart.File) error {
+func UploadImage(id string, path string, file multipart.File) error {
 
 	if err := convertImage(path, file); err != nil {
 		return fmt.Errorf("error converting image: %w", err)
 	}
 
-	query := "UPDATE Meals SET photo_url = ? WHERE id = ?"
-	if _, err := db.Exec(query, path, id); err != nil {
-		log.Printf("error saving meal path in db: %s", err)
-		return fmt.Errorf("error updating database: %w", err)
-	}
-
-	return nil
-}
-
-func UploadExerciseImage(id string, path string, file multipart.File) error {
-	if err := convertImage(path, file); err != nil {
-		return fmt.Errorf("error converting image: %w", err)
-	}
-
-	query := "UPDATE Exercises SET photo_url = ? WHERE id = ?"
-	_, erro := db.Exec(query, path, id)
-	if erro != nil {
-		log.Printf("error saving exercise path in db : %s", erro)
-		return erro
-	}
-	return nil
-}
-
-func UploadRoutineImage(id string, path string, file multipart.File) error {
-
-	if err := convertImage(path, file); err != nil {
-		return fmt.Errorf("error converting image: %w", err)
-	}
-
-	query := "UPDATE Routines SET photo_url = ? WHERE id = ?"
-	_, erro := db.Exec(query, path, id)
-	if erro != nil {
-		log.Printf("error saving Routine path in db : %s", erro)
-		return erro
-	}
 	return nil
 }

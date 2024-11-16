@@ -10,7 +10,7 @@ func GetMeal(id string) (structmodels.Meal, error) {
 	fmt.Printf("LLEGO AQUI con ID: %s", id)
 	query := "SELECT * FROM Meals WHERE id = ?"
 
-	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL, &meal.Name)
+	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.Name)
 	fmt.Print(err)
 
 	return meal, err
@@ -18,8 +18,8 @@ func GetMeal(id string) (structmodels.Meal, error) {
 }
 
 func PostMeal(nmeal structmodels.NewMeal) (int, error) {
-	query := "INSERT INTO Meals (name, description, calories, proteins, fats, carbs, photo_url) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	result, err := db.Exec(query, nmeal.Name, nmeal.Description, nmeal.Calories, nmeal.Proteins, nmeal.Fats, nmeal.Carbs, nmeal.PhotoURL)
+	query := "INSERT INTO Meals (name, description, calories, proteins, fats, carbs) VALUES (?, ?, ?, ?, ?, ?)"
+	result, err := db.Exec(query, nmeal.Name, nmeal.Description, nmeal.Calories, nmeal.Proteins, nmeal.Fats, nmeal.Carbs)
 	if err != nil {
 		fmt.Print(err)
 		return 0, err
@@ -42,9 +42,9 @@ func DelMeal(id string) error {
 }
 
 func UpdateMeal(meal structmodels.Meal) error {
-	query := `UPDATE Meals SET name = ?, description = ?, calories = ?, proteins = ?, fats = ?, carbs = ?, photo_url = ? WHERE id = ?`
+	query := `UPDATE Meals SET name = ?, description = ?, calories = ?, proteins = ?, fats = ?, carbs = ? WHERE id = ?`
 
-	_, err := db.Exec(query, meal.Name, meal.Description, meal.Calories, meal.Proteins, meal.Fats, meal.Carbs, meal.PhotoURL, meal.ID)
+	_, err := db.Exec(query, meal.Name, meal.Description, meal.Calories, meal.Proteins, meal.Fats, meal.Carbs, meal.ID)
 	fmt.Print(err)
 	return err
 }
@@ -53,7 +53,7 @@ func GetAllMeals() ([]structmodels.Meal, error) {
 	var meals []structmodels.Meal
 
 	// Make sure to explicitly select the columns
-	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs, photo_url FROM Meals")
+	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs FROM Meals")
 	if err != nil {
 		return nil, fmt.Errorf("error querying meals: %v", err)
 	}
@@ -62,7 +62,7 @@ func GetAllMeals() ([]structmodels.Meal, error) {
 	for rows.Next() {
 		var meal structmodels.Meal
 		// Ensure the order of the columns matches the struct definition
-		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL); err != nil {
+		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs); err != nil {
 			return nil, fmt.Errorf("error scanning meal: %v", err)
 		}
 		meals = append(meals, meal)

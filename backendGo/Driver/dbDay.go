@@ -53,7 +53,7 @@ func CreateEmptyDay(userID int, date string) (structmodels.Day, int, error) {
 	}
 
 	newDay.Id = int(dayID)
-	newDay.UserId = userID // Convert string to int
+	newDay.UserId = userID // Convert string to intd
 	newDay.Date = date
 
 	return newDay, int(dayID), nil
@@ -61,7 +61,7 @@ func CreateEmptyDay(userID int, date string) (structmodels.Day, int, error) {
 
 func GetMealsForDay(dayID int) ([]structmodels.Meal, error) {
 	query := `
-        SELECT m.id, m.name, m.description, m.calories, m.proteins, m.fats, m.carbs, m.photo_url
+        SELECT m.id, m.name, m.description, m.calories, m.proteins, m.fats, m.carbs
         FROM Meals m
         INNER JOIN DayMeals dm ON m.id = dm.meal_id
         WHERE dm.day_id = ?`
@@ -77,7 +77,7 @@ func GetMealsForDay(dayID int) ([]structmodels.Meal, error) {
 
 	for rows.Next() {
 		var meal structmodels.Meal
-		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL); err != nil {
+		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs); err != nil {
 			return nil, fmt.Errorf("error scanning meal: %v", err)
 		}
 		meals = append(meals, meal)
