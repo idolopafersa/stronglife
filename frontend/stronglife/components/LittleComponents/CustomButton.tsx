@@ -47,10 +47,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    
+    width: "90%",
     backgroundColor: "#FFF50A",
-    borderRadius: 15,
-    padding: 15, 
+    borderRadius: 15, 
     minHeight: 62,
     flexDirection: "row",
     justifyContent: "center",
@@ -61,7 +60,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#000000", // Ejemplo de color primario
-    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
   },
   indicator: {

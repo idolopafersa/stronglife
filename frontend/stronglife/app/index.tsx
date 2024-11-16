@@ -1,56 +1,35 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from 'react-native';
-import HelpScreen from '../components/HelpScreen';
-import HomeScreen from '../components/HomeScreen';
-import DetailsScreen from '../components/DetailsScreen';
-import Icon from "react-native-vector-icons/FontAwesome5"
-import Onboarding from '@/app/Onboarding';
-
-const Tab = createBottomTabNavigator();
+import CustomButton from '@/components/LittleComponents/CustomButton';
+import { router } from 'expo-router';
+import { Image, ImageBackground, SafeAreaView, StyleSheet, Text,  } from 'react-native';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator initialRouteName="Home"
-      screenOptions={{
-        animation: 'fade',
-      }}>
-        
-        <Tab.Screen 
-          name="Home" 
-          component={HomeScreen}
-          options={{
-            tabBarIcon: () => <Icon name="home" size={30} color="tomato" />,
-            tabBarLabel: 'Home',
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: 'tomato' },
-          
-          }}
-        />
-        <Tab.Screen 
-          name="Details" 
-          component={DetailsScreen}
-          options={{
-            tabBarIcon: () => <Icon name="user" size={30} color="tomato" />,
-            tabBarLabel: 'Details',
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: 'tomato' },
-          }}
-        />
-        <Tab.Screen 
-          name="Help" 
-          component={HelpScreen}
-          options={{
-            tabBarIcon: () => <Icon name="help" size={30} color="tomato" />,
-            tabBarLabel: 'Help',
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: 'tomato' },
-          }}
-        />
+    <ImageBackground 
+      source={require('../assets/images/Inicio_Sesion.png')}
+      style={styles.container}
+      resizeMode="cover"
+    >
+      <Text style={styles.text}> Welcome  to </Text>
+      <Text style={styles.text}> STRONGLIFE</Text>
+      <Text style={styles.text}> Archive you body goals with us</Text>
+      <CustomButton
+      title = "Sign in"
+      handlePress={() => router.navigate("/sign_in")}></CustomButton>
 
-      </Tab.Navigator>
-    </NavigationContainer>
+    </ImageBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  text: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
