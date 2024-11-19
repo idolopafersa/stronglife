@@ -21,19 +21,20 @@ export default function App() {
           name="Home" 
           component={HomeScreen}
           options={{
-            tabBarIcon: () => <Icon name="home" size={30} color="tomato" />,
-            tabBarLabel: 'Home',
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: 'tomato' },
-          
+            tabBarIcon: () => <Icon name="building" size={30} color="#A5D32D" />,
+            tabBarLabel: 'Mi Gimnasio',
+            tabBarLabelStyle: {color: '#A5D32D'},
+            headerShown: false,
+              
           }}
         />
         <Tab.Screen 
           name="Details" 
           component={DetailsScreen}
           options={{
-            tabBarIcon: () => <Icon name="user" size={30} color="tomato" />,
-            tabBarLabel: 'Details',
+            tabBarIcon: () => <Icon name="user" size={30} color="#A5D32D" />,
+            tabBarLabel: 'Mi Cocina',
+            tabBarLabelStyle: {color: '#A5D32D'},
             headerTintColor: 'white',
             headerStyle: { backgroundColor: 'tomato' },
           }}
@@ -42,10 +43,11 @@ export default function App() {
           name="Help" 
           component={HelpScreen}
           options={{
-            tabBarIcon: () => <Icon name="help" size={30} color="tomato" />,
-            tabBarLabel: 'Help',
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: 'tomato' },
+            tabBarIcon: () => <Icon name="calendar" size={30} color="#A5D32D" />,
+            tabBarLabel: 'Planificacion',
+            tabBarLabelStyle: {color: '#A5D32D'},
+            
+            headerShown: false,
           }}
         />
 

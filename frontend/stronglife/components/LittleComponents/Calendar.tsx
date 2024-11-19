@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text,TouchableOpacity } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native';
-import type {} from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers'
 import dayjs from 'dayjs';
 import CheckIcon from 'react-native-vector-icons/MaterialIcons'; 
 import Arrow from 'react-native-vector-icons/MaterialIcons'; 
@@ -93,8 +91,8 @@ const calculateStreak = (completedDays: { [key: string]: boolean }) => {
 };
 
   return (
-    <View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
+    <View style={styles.container}>
+    <View style={styles.arrows}>
         <TouchableOpacity onPress={() => setCurrentWeek(subWeek(currentWeek))}>
             <Arrow name="arrow-back" size={32} color="black" />
         </TouchableOpacity>
@@ -104,7 +102,7 @@ const calculateStreak = (completedDays: { [key: string]: boolean }) => {
         </TouchableOpacity>
     </View>
       
-    <View style={styles.container}>
+    <View style={styles.week}>
       {currentWeek.map((day, index) => (
         <TouchableOpacity
           key={index}
@@ -134,14 +132,24 @@ const calculateStreak = (completedDays: { [key: string]: boolean }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
+    week: {
       flexDirection: 'row',
       justifyContent: 'space-around',
-      padding: 'auto',
+      
       alignItems: 'center',
-      backgroundColor: 'grey',
-      borderRadius: 20, 
+      
     },
+    container: {
+      backgroundColor: 'grey',
+      borderRadius: 300, 
+      padding: '5%',
+    },
+    arrows: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginHorizontal: 10,
+    }
+    ,
     dayContainer: {
       width: 40,
       height: 60,
@@ -151,10 +159,10 @@ const styles = StyleSheet.create({
       marginHorizontal: 5,
     },
     currentDay: {
-      backgroundColor: '#FF8C00', 
+      backgroundColor: '#orange', 
     },
     completed: {
-      backgroundColor: '#00C781', 
+      backgroundColor: '#r', 
     },
     notCompleted: {
       backgroundColor: '#F5F5F5', 
@@ -186,6 +194,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: 'bold',
       color: 'black',
+      padding: 10,
     },
   });
   

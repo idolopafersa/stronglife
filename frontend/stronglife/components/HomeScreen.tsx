@@ -5,14 +5,14 @@ import {TouchableOpacity, Text, View, Button ,StyleSheet,Image} from 'react-nati
 import Calendar from './LittleComponents/Calendar';
 import CustomButton from './LittleComponents/CustomButton';
 
-function HomeScreen({ navigation }) {
-    const [showGif, setShowGif] = useState(false);
+function HomeScreen() {
+   
   return (
 
-    <View>
-    <View>
+    <View style={styles.container}>
+    
       <Calendar/>
-      </View>
+      
     <View style={{  alignItems: 'center', justifyContent: 'center' }}>
       
       <Text>Pantalla de Inicio</Text>
@@ -27,7 +27,7 @@ function HomeScreen({ navigation }) {
     </View>
   );
 }
-const estilos = StyleSheet.create({
+const styles = StyleSheet.create({
   button: {
     backgroundColor: 'gold',  // Color dorado de fondo
     padding: 10,
@@ -39,6 +39,7 @@ const estilos = StyleSheet.create({
     fontWeight: 'bold',
   },
   container:{
+      backgroundColor: 'black',
       flex: 1,
       },
    

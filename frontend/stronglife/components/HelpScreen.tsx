@@ -24,11 +24,13 @@ const styles = StyleSheet.create({
     padding: 16,
     flexGrow: 1,
     justifyContent: 'center',
+    backgroundColor: 'black',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: 'white',
   },
   subtitle: {
     fontSize: 18,
