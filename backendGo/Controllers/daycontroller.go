@@ -10,7 +10,7 @@ import (
 )
 
 func Getday(w http.ResponseWriter, r *http.Request) {
-
+	
 	date := r.URL.Query().Get("date")
 
 	userID, err := security.VerifyCookie(r)

@@ -17,7 +17,7 @@ func GetrExercises(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
@@ -43,7 +43,7 @@ func DelrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine")
 	exerciseID := r.URL.Query().Get("exercise")
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
@@ -64,7 +64,7 @@ func AddrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine")
 	exerciseID := r.URL.Query().Get("exercise")
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}

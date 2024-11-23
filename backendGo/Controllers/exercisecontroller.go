@@ -12,7 +12,7 @@ import (
 
 func GetExercise(w http.ResponseWriter, r *http.Request) {
 	var exe structmodels.Exercise
-
+	
 	id := r.URL.Query().Get("id")
 
 	if id == "" {

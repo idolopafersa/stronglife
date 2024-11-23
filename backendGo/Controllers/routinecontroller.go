@@ -43,7 +43,7 @@ func GetRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
@@ -67,7 +67,7 @@ func PutRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	r.userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
@@ -92,7 +92,7 @@ func DelRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
@@ -107,7 +107,7 @@ func DelRoutine(w http.ResponseWriter, r *http.Request) {
 
 func AllRoutines(w http.ResponseWriter, r *http.Request) {
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}

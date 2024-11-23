@@ -20,8 +20,8 @@ func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
 }
 
 func PutRoutine(routine structmodels.Routine) error {
-	query := `UPDATE Routines SET name = ?, description = ?,  WHERE id = ?`
-	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID)
+	query := `UPDATE Routines SET name = ?, description = ?,  WHERE id = ? AND user_id = ?`
+	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID, routine.userID)
 	if err != nil {
 		fmt.Println("Error updating routine:", err)
 		return err
@@ -31,8 +31,8 @@ func PutRoutine(routine structmodels.Routine) error {
 
 func GetRoutine(id string) (structmodels.Routine, error) {
 	var routine structmodels.Routine
-	query := "SELECT id, name, description FROM Routines WHERE id = ?"
-	err := db.QueryRow(query, id).Scan(&routine.ID, &routine.Name, &routine.Description)
+	query := "SELECT id, name, description FROM Routines WHERE id = ? AND user_id = ?"
+	err := db.QueryRow(query, id, userID).Scan(&routine.ID, &routine.Name, &routine.Description)
 	if err != nil {
 		fmt.Println("Error getting routine:", err)
 		return routine, err
@@ -43,8 +43,8 @@ func GetRoutine(id string) (structmodels.Routine, error) {
 
 func DelRoutine(id string) error {
 	var routineID int
-	queryGetID := "SELECT id FROM Routines WHERE id = ?"
-	db.QueryRow(queryGetID, id).Scan(&routineID)
+	queryGetID := "SELECT id FROM Routines WHERE id = ? AND user_id = ?"
+	db.QueryRow(queryGetID, id, userID).Scan(&routineID)
 
 	query := "DELETE FROM RoutineExercises WHERE routine_id = ?;"
 	query2 := "DELETE FROM Routines where id = ?"
@@ -58,7 +58,9 @@ func DelRoutine(id string) error {
 func GetAlRoutines() ([]structmodels.Routine, error) {
 	var routines []structmodels.Routine
 
-	rows, err := db.Query("SELECT * FROM Routines")
+	rows, err := db.Query("SELECT * FROM Routines WHERE user_id = ?;")
+	db.QueryRow(rows, userID) //userID lo pasa el controlador
+
 	if err != nil {
 
 		return nil, err
