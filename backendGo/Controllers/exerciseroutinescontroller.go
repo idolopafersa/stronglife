@@ -17,7 +17,7 @@ func GetrExercises(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := security.VerifyCookie(r)
+	_, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
@@ -48,7 +48,7 @@ func DelrExercise(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	erre := driver.RemoveExerciseFromRoutine(routineID, exerciseID)
+	erre := driver.RemoveExerciseFromRoutine(routineID, exerciseID, userID)
 	if erre != nil {
 		log.Printf("Error DEl exercise in Routine driver: %s /n", err)
 		http.Error(w, "Error removing exercise from routine", http.StatusInternalServerError)
@@ -69,7 +69,7 @@ func AddrExercise(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	erre := driver.AddExerciseToRoutine(routineID, exerciseID)
+	erre := driver.AddExerciseToRoutine(routineID, exerciseID, userID)
 	if erre != nil {
 		log.Printf("Error POST exercise in Routine driver: %s /n", err)
 		http.Error(w, "Error adding exercise to routine", http.StatusInternalServerError)

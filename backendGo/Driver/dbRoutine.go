@@ -19,9 +19,9 @@ func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
 
 }
 
-func PutRoutine(routine structmodels.Routine) error {
+func PutRoutine(routine structmodels.Routine, userID int) error {
 	query := `UPDATE Routines SET name = ?, description = ?,  WHERE id = ? AND user_id = ?`
-	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID, routine.userID)
+	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID, routine.UserID)
 	if err != nil {
 		fmt.Println("Error updating routine:", err)
 		return err
@@ -29,7 +29,7 @@ func PutRoutine(routine structmodels.Routine) error {
 	return nil
 }
 
-func GetRoutine(id string) (structmodels.Routine, error) {
+func GetRoutine(id string, userID int) (structmodels.Routine, error) {
 	var routine structmodels.Routine
 	query := "SELECT id, name, description FROM Routines WHERE id = ? AND user_id = ?"
 	err := db.QueryRow(query, id, userID).Scan(&routine.ID, &routine.Name, &routine.Description)
@@ -41,7 +41,7 @@ func GetRoutine(id string) (structmodels.Routine, error) {
 
 }
 
-func DelRoutine(id string) error {
+func DelRoutine(id string, userID int) error {
 	var routineID int
 	queryGetID := "SELECT id FROM Routines WHERE id = ? AND user_id = ?"
 	db.QueryRow(queryGetID, id, userID).Scan(&routineID)
@@ -55,11 +55,11 @@ func DelRoutine(id string) error {
 	return err
 }
 
-func GetAlRoutines() ([]structmodels.Routine, error) {
+func GetAlRoutines(userID int) ([]structmodels.Routine, error) {
 	var routines []structmodels.Routine
 
-	rows, err := db.Query("SELECT * FROM Routines WHERE user_id = ?;")
-	db.QueryRow(rows, userID) //userID lo pasa el controlador
+	cadena := fmt.Sprintf("SELECT * FROM Routines WHERE user_id = %d;", userID)
+	rows, err := db.Query(cadena)
 
 	if err != nil {
 

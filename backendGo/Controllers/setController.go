@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	driver "backendgo/Driver"
 	"backendgo/security"
@@ -30,3 +31,4 @@ func GetSet(w http.ResponseWriter, r *http.Request) { //Devuelve un único set, 
 
 	json.NewEncoder(w).Encode(sets)
 }
+*/

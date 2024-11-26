@@ -6,6 +6,7 @@ type NewRoutine struct {
 }
 
 type Routine struct {
-	ID int `json:"id"`
+	ID     int `json:"id"`
+	UserID int `json:"userID"`
 	NewRoutine
 }

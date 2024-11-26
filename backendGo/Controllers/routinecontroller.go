@@ -48,7 +48,7 @@ func GetRoutine(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	routine, err := driver.GetRoutine(id)
+	routine, err := driver.GetRoutine(id, userID)
 	if err != nil {
 		log.Printf("Error GET Routine driver: %s /n", err)
 		http.Error(w, "Routine not found", http.StatusNotFound)
@@ -67,12 +67,12 @@ func PutRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.userID, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	errw := driver.PutRoutine(routine)
+	errw := driver.PutRoutine(routine, userID)
 	if errw != nil {
 		log.Printf("Error PUT Routine driver: %s /n", err)
 		http.Error(w, "Error updating routine", http.StatusInternalServerError)
@@ -97,7 +97,7 @@ func DelRoutine(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	erre := driver.DelRoutine(id)
+	erre := driver.DelRoutine(id, userID)
 	if erre != nil {
 		log.Printf("Error DEL Routine driver: %s /n", err)
 		http.Error(w, "routine not found", http.StatusNotFound)
@@ -112,7 +112,7 @@ func AllRoutines(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	routines, erre := driver.GetAlRoutines()
+	routines, erre := driver.GetAlRoutines(userID)
 	if erre != nil {
 		log.Printf("Error GETALL  Routine driver: %s /n", err)
 		http.Error(w, "routine not found", http.StatusNotFound)

@@ -25,7 +25,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		token, _ := security.CreateToken(id)
 		//when a user sign in, they will receive a cookie to keep their JWT
 		cookie := http.Cookie{
-			Name:     "token",
+			Name:     "jwt_token",
 			Value:    token,
 			Path:     "/",
 			HttpOnly: true,
@@ -42,7 +42,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	cookie, _ := r.Cookie("token")
+	cookie, _ := r.Cookie("jwt_token")
 	cookie.MaxAge = -1
 	cookie.Expires = time.Unix(0, 0)
 	cookie.Path = "/"

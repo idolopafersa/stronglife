@@ -1,52 +1,77 @@
 package driver
 
-import structmodels "backendgo/StructModels"
+import (
+	structmodels "backendgo/StructModels"
+	"database/sql"
+	"fmt"
+)
 
-func AddExerciseToRoutine(routineID, exerciseID string) error {
-	err := db.QueryRow("SELECT name FROM Routines WHERE id = ? AND user_id = ?", routineID, userID)
+// Declarar una variable global para la conexión a la base de datos
 
+func AddExerciseToRoutine(routineID, exerciseID string, userID int) error {
+	var name string
+
+	// Comprobar que la rutina pertenece al usuario
+	err := db.QueryRow("SELECT name FROM Routines WHERE id = ? AND user_id = ?", routineID, userID).Scan(&name)
 	if err == sql.ErrNoRows {
 		fmt.Println("No routine found with that ID for the current user")
+		return fmt.Errorf("routine not found")
 	} else if err != nil {
-		log.Fatalf("Query error: %v", err)
-	} else {
-		fmt.Printf("Routine found: %s\n", name)
-		query := "INSERT INTO RoutineExercises (routine_id, exercise_id) VALUES (?, ?)"
-		_, err := db.Exec(query, routineID, exerciseID)
+		return fmt.Errorf("query error: %v", err)
 	}
 
-	return err
+	// Insertar el ejercicio en la rutina
+	query := "INSERT INTO RoutineExercises (routine_id, exercise_id) VALUES (?, ?)"
+	_, err = db.Exec(query, routineID, exerciseID)
+	if err != nil {
+		return fmt.Errorf("failed to add exercise to routine: %v", err)
+	}
+
+	fmt.Printf("Exercise added to routine: %s\n", name)
+	return nil
 }
 
-func RemoveExerciseFromRoutine(routineID, exerciseID string) error {
-	// Primero comprobamos que la rutina existe y pertenece al usuario
-	err := db.QueryRow("SELECT name FROM Routines WHERE id = ? AND user_id = ?", routineID, userID)
+func RemoveExerciseFromRoutine(routineID, exerciseID string, userID int) error {
+	var name string
 
-	//Comprobamos que existe la vinculación entre la rutina y ejercicio (RoutineExercises)
-	err:= db.QueryRow("SELECT * FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?", routineID, exerciseID)
-	
+	// Comprobar que la rutina pertenece al usuario
+	err := db.QueryRow("SELECT name FROM Routines WHERE id = ? AND user_id = ?", routineID, userID).Scan(&name)
 	if err == sql.ErrNoRows {
-		fmt.Println("No exercise found with that ID on that rutine for the current user")
+		fmt.Println("No routine found with that ID for the current user")
+		return fmt.Errorf("routine not found")
 	} else if err != nil {
-		log.Fatalf("Query error: %v", err)
-	} else {
-		fmt.Printf("Exercise found: %s\n", name)
-		query := "DELETE FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?"
-		_, err := db.Exec(query, routineID, exerciseID)
+		return fmt.Errorf("query error: %v", err)
 	}
 
-	return err
+	// Comprobar que el ejercicio está vinculado a la rutina
+	err = db.QueryRow("SELECT 1 FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?", routineID, exerciseID).Scan(new(int))
+	if err == sql.ErrNoRows {
+		fmt.Println("No exercise found with that ID in the routine for the current user")
+		return fmt.Errorf("exercise not found in routine")
+	} else if err != nil {
+		return fmt.Errorf("query error: %v", err)
+	}
+
+	// Eliminar el ejercicio de la rutina
+	query := "DELETE FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?"
+	_, err = db.Exec(query, routineID, exerciseID)
+	if err != nil {
+		return fmt.Errorf("failed to remove exercise from routine: %v", err)
+	}
+
+	fmt.Printf("Exercise removed from routine: %s\n", name)
+	return nil
 }
 
 func GetExercisesInRoutine(routineID string) ([]structmodels.Exercise, error) {
-	//Falta por verificar seguridad
-	query := `SELECT e.* FROM Exercises e
+	query := `SELECT e.id, e.name, e.description 
+              FROM Exercises e
               INNER JOIN RoutineExercises re ON e.id = re.exercise_id
-              WHERE re.routine_id?`
+              WHERE re.routine_id = ?`
 
 	rows, err := db.Query(query, routineID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("query error: %v", err)
 	}
 	defer rows.Close()
 
@@ -54,9 +79,14 @@ func GetExercisesInRoutine(routineID string) ([]structmodels.Exercise, error) {
 	for rows.Next() {
 		var exercise structmodels.Exercise
 		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Description); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to scan exercise: %v", err)
 		}
 		exercises = append(exercises, exercise)
+	}
+
+	// Verificar si ocurrió un error durante la iteración
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %v", err)
 	}
 
 	return exercises, nil
