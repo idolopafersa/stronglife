@@ -19,12 +19,12 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	id, err := driver.PostRoutine(routine)
+	id, err := driver.PostRoutine(routine, userID)
 	if err != nil {
 		log.Printf("Error POST Routine driver: %s /n", err)
 		http.Error(w, "Error creating routine", http.StatusInternalServerError)

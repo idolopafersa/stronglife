@@ -7,8 +7,8 @@ import (
 
 func GetMeal(id string) (structmodels.Meal, error) {
 	var meal structmodels.Meal
-	fmt.Printf("LLEGO AQUI con ID: %s", id)
-	query := "SELECT * FROM Meals WHERE id = ?"
+	//fmt.Printf("LLEGO AQUI con ID: %s \n", id)
+	query := "SELECT id, description, calories, proteins, fats, carbs, name FROM Meals WHERE id = ?"
 
 	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.Name)
 	fmt.Print(err)
@@ -18,8 +18,10 @@ func GetMeal(id string) (structmodels.Meal, error) {
 }
 
 func PostMeal(nmeal structmodels.NewMeal) (int, error) {
-	query := "INSERT INTO Meals (name, description, calories, proteins, fats, carbs) VALUES (?, ?, ?, ?, ?, ?)"
-	result, err := db.Exec(query, nmeal.Name, nmeal.Description, nmeal.Calories, nmeal.Proteins, nmeal.Fats, nmeal.Carbs)
+	//For now, all meals are private (default value isPublic=0)
+	//We need to add a relation with user_id
+	query := "INSERT INTO Meals (name, description, calories, proteins, fats, carbs, isPublic) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	result, err := db.Exec(query, nmeal.Name, nmeal.Description, nmeal.Calories, nmeal.Proteins, nmeal.Fats, nmeal.Carbs, 0)
 	if err != nil {
 		fmt.Print(err)
 		return 0, err
@@ -52,8 +54,8 @@ func UpdateMeal(meal structmodels.Meal) error {
 func GetAllMeals() ([]structmodels.Meal, error) {
 	var meals []structmodels.Meal
 
-	// Make sure to explicitly select the columns
-	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs FROM Meals")
+	// GetAllMeals retrieves all meals from the database which are public (isPublic = 1)
+	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs FROM Meals where isPublic = 1")
 	if err != nil {
 		return nil, fmt.Errorf("error querying meals: %v", err)
 	}
@@ -61,7 +63,6 @@ func GetAllMeals() ([]structmodels.Meal, error) {
 
 	for rows.Next() {
 		var meal structmodels.Meal
-		// Ensure the order of the columns matches the struct definition
 		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs); err != nil {
 			return nil, fmt.Errorf("error scanning meal: %v", err)
 		}

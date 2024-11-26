@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
-	query := "INSERT INTO Routines (name, description) VALUES (?, ?, ?)"
-	result, err := db.Exec(query, newRoutine.Name, newRoutine.Description)
+func PostRoutine(newRoutine structmodels.NewRoutine, userID int) (int, error) {
+	query := "INSERT INTO Routines (name, description, user_id) VALUES (?, ?, ?)"
+	result, err := db.Exec(query, newRoutine.Name, newRoutine.Description, userID)
 
 	if err != nil {
 		fmt.Println("Error creating new routine:", err)
