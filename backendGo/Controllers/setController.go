@@ -72,7 +72,7 @@ func GetAlSetRoutine(w http.ResponseWriter, r *http.Request) {
 
 	// id NULL
 	if RoutineId == "" {
-		http.Error(w, "RoutineId or ExerciseId parameter is missing", http.StatusBadRequest)
+		http.Error(w, "RoutineId parameter is missing", http.StatusBadRequest)
 		return
 	}
 

@@ -15,7 +15,7 @@ func GetSet(routineID, exerciseID string) (structmodels.Set, error) {
 	// Falta la seguridad
 	// hace falta id para el set? -> Ahora mismo no existe
 	// Pero si existe en struct, corregir struct o bdd
-	query := "SELECT set_number, reps, weight, routine_id, exercise_id FROM Sets WHERE routine_id = ? AND exercise_id = ? LIMIT 1"
+	query := "SELECT id, routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = ? AND exercise_id = ? LIMIT 1"
 	err := db.QueryRow(query, routineID, exerciseID).Scan(&Set.Set_number, &Set.Reps, &Set.Weight, &Set.RoutineID, &Set.ExerciseID)
 
 	if err != nil {
@@ -25,28 +25,46 @@ func GetSet(routineID, exerciseID string) (structmodels.Set, error) {
 	return Set, nil
 }
 
-func GetAlSet(routineID, exerciseID string) (structmodels.Set, error) {
+func GetAlSet(routineID, exerciseID string) ([]structmodels.Set, error) {
 
-	var Set structmodels.Set //estructura set
-	query := "SELECT set_number, reps, weight, routine_id, exercise_id FROM Sets WHERE routine_id = ? AND exercise_id = ?"
-	err := db.QueryRow(query, routineID, exerciseID).Scan(&Set.Set_number, &Set.Reps, &Set.Weight, &Set.RoutineID, &Set.ExerciseID)
+	var Sets []structmodels.Set
+	query := fmt.Sprintf("SELECT id, routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = %s AND exercise_id = %s;", routineID, exerciseID)
+	rows, err := db.Query(query)
 
 	if err != nil {
-		fmt.Println("Error getting set:", err)
-		return Set, err
+		return nil, err
 	}
-	return Set, nil
+	defer rows.Close()
+
+	for rows.Next() {
+		var Set structmodels.Set
+		if err := rows.Scan(&Set.ID, &Set.RoutineID, &Set.ExerciseID, &Set.Set_number, &Set.Reps, &Set.Weight); err != nil {
+			return nil, err
+		}
+		Sets = append(Sets, Set)
+	}
+
+	return Sets, nil
 }
 
-func GetAlSetRoutine(routineID string) (structmodels.Set, error) {
+func GetAlSetRoutine(routineID string) ([]structmodels.Set, error) {
 
-	var Set structmodels.Set //estructura set
-	query := "SELECT set_number, reps, weight, routine_id, exercise_id FROM Sets WHERE routine_id = ?"
-	err := db.QueryRow(query, routineID).Scan(&Set.Set_number, &Set.Reps, &Set.Weight, &Set.RoutineID, &Set.ExerciseID)
+	var Sets []structmodels.Set
+	query := fmt.Sprintf("SELECT id, routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = %s;", routineID)
+	rows, err := db.Query(query)
 
 	if err != nil {
-		fmt.Println("Error getting set:", err)
-		return Set, err
+		return nil, err
 	}
-	return Set, nil
+	defer rows.Close()
+
+	for rows.Next() {
+		var Set structmodels.Set
+		if err := rows.Scan(&Set.ID, &Set.RoutineID, &Set.ExerciseID, &Set.Set_number, &Set.Reps, &Set.Weight); err != nil {
+			return nil, err
+		}
+		Sets = append(Sets, Set)
+	}
+
+	return Sets, nil
 }
