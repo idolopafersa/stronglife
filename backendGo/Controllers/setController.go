@@ -40,8 +40,6 @@ func GetSet(w http.ResponseWriter, r *http.Request) { //Devuelve un único set, 
 	json.NewEncoder(w).Encode(set)
 }
 
-
-
 func GetAlSet(w http.ResponseWriter, r *http.Request) {
 	RoutineId := r.URL.Query().Get("RoutineId")
 	ExerciseId := r.URL.Query().Get("ExerciseId")
@@ -59,6 +57,31 @@ func GetAlSet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	set, err := driver.GetAlSet(RoutineId, ExerciseId)
+	if err != nil {
+		log.Printf("Error Getting Sets in driver: %s /n", err)
+		http.Error(w, "Couldnt get sets", 404)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(set)
+}
+
+func GetAlSetRoutine(w http.ResponseWriter, r *http.Request) {
+	RoutineId := r.URL.Query().Get("RoutineId")
+
+	// id NULL
+	if RoutineId == "" {
+		http.Error(w, "RoutineId or ExerciseId parameter is missing", http.StatusBadRequest)
+		return
+	}
+
+	_, err := security.VerifyCookie(r)
+	if err != nil {
+		http.Error(w, "Error Cookie", http.StatusNotFound)
+	}
+
+	set, err := driver.GetAlSetRoutine(RoutineId)
 	if err != nil {
 		log.Printf("Error Getting Sets in driver: %s /n", err)
 		http.Error(w, "Couldnt get sets", 404)

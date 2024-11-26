@@ -37,3 +37,16 @@ func GetAlSet(routineID, exerciseID string) (structmodels.Set, error) {
 	}
 	return Set, nil
 }
+
+func GetAlSetRoutine(routineID string) (structmodels.Set, error) {
+
+	var Set structmodels.Set //estructura set
+	query := "SELECT set_number, reps, weight, routine_id, exercise_id FROM Sets WHERE routine_id = ?"
+	err := db.QueryRow(query, routineID).Scan(&Set.Set_number, &Set.Reps, &Set.Weight, &Set.RoutineID, &Set.ExerciseID)
+
+	if err != nil {
+		fmt.Println("Error getting set:", err)
+		return Set, err
+	}
+	return Set, nil
+}
