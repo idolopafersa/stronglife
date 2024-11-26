@@ -24,11 +24,13 @@ func GetSet(w http.ResponseWriter, r *http.Request) { //Devuelve un único set, 
 	}
 
 	//Ahora mismo los sets no van a tener seguridad
+	//userID, err := security.VerifyCookie(r)
 	_, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
+	//	set, err := driver.GetSet(RoutineId, ExerciseId, userID)
 	set, err := driver.GetSet(RoutineId, ExerciseId)
 	if err != nil {
 		log.Printf("Error Getting Sets in driver: %s /n", err)

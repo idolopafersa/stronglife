@@ -20,8 +20,8 @@ func PostRoutine(newRoutine structmodels.NewRoutine, userID int) (int, error) {
 }
 
 func PutRoutine(routine structmodels.Routine, userID int) error {
-	query := `UPDATE Routines SET name = ?, description = ?,  WHERE id = ? AND user_id = ?`
-	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID, routine.UserID)
+	query := `UPDATE Routines SET name = ?, description = ? WHERE id = ? AND user_id = ?`
+	_, err := db.Exec(query, routine.Name, routine.Description, routine.ID, userID)
 	if err != nil {
 		fmt.Println("Error updating routine:", err)
 		return err
