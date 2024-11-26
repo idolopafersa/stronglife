@@ -39,3 +39,32 @@ func GetSet(w http.ResponseWriter, r *http.Request) { //Devuelve un único set, 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(set)
 }
+
+
+
+func GetAlSet(w http.ResponseWriter, r *http.Request) {
+	RoutineId := r.URL.Query().Get("RoutineId")
+	ExerciseId := r.URL.Query().Get("ExerciseId")
+
+	// id NULL
+	if RoutineId == "" || ExerciseId == "" {
+		http.Error(w, "RoutineId or ExerciseId parameter is missing", http.StatusBadRequest)
+		return
+	}
+
+	//Ahora mismo los sets no van a tener seguridad
+	_, err := security.VerifyCookie(r)
+	if err != nil {
+		http.Error(w, "Error Cookie", http.StatusNotFound)
+	}
+
+	set, err := driver.GetAlSet(RoutineId, ExerciseId)
+	if err != nil {
+		log.Printf("Error Getting Sets in driver: %s /n", err)
+		http.Error(w, "Couldnt get sets", 404)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(set)
+}
