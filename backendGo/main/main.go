@@ -57,14 +57,15 @@ func main() {
 	r.HandleFunc("/api/routine/getimage", controllers.GetExerciseImage).Methods("GET")
 
 	//add,remove and get exercises of a routine
-
 	r.HandleFunc("/api/exercises/routines/get", controllers.GetrExercises).Methods("GET")
 	r.HandleFunc("/api/exercises/routines/get", controllers.GetrExercises).Methods("GET")
 	r.HandleFunc("/api/exercises/routines/post", controllers.AddrExercise).Methods("POST")
 	r.HandleFunc("/api/exercises/routines/del", controllers.DelrExercise).Methods("DELETE")
 
-	//days handlin
+	//sets handling
+	r.HandleFunc("/api/sets/get", controllers.GetSet).Methods("GET")
 
+	//days handling
 	r.HandleFunc("/api/day/get", controllers.Getday).Methods("GET")
 	r.HandleFunc("/api/day/routine/post", controllers.AddRoutineToDay).Methods("POST")
 	r.HandleFunc("/api/day/meal/post", controllers.AddMealToDay).Methods("POST")
