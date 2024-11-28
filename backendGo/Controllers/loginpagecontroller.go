@@ -39,6 +39,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "User or password are wrong", http.StatusForbidden)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Correct login"})
+
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

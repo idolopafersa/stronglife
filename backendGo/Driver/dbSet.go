@@ -66,3 +66,26 @@ func GetAlSetRoutine(routineID string) ([]structmodels.Set, error) {
 
 	return Sets, nil
 }
+
+func PutSet(RoutineID, ExerciseID, Set_number, Weight, Reps string, userID int) error {
+	query := `UPDATE Sets SET reps = ?, weight = ? WHERE routine_id = ? AND exercise_id = ? AND set_number = ?`
+	_, err := db.Exec(query, Reps, Weight, RoutineID, ExerciseID, Set_number)
+
+	if err != nil {
+		fmt.Println("Error updating set:", err)
+		return err
+	}
+	return nil
+}
+
+func DelSet(RoutineID, ExerciseID, Set_number string, userID int) error {
+	var setID int
+	queryGetID := "SELECT id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
+	db.QueryRow(queryGetID, RoutineID, ExerciseID, Set_number).Scan(&setID)
+
+	query := "DELETE FROM Sets WHERE id = ?;"
+	_, err := db.Exec(query, setID)
+	fmt.Print(err)
+
+	return err
+}

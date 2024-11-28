@@ -66,6 +66,8 @@ func main() {
 	r.HandleFunc("/api/sets/get", controllers.GetSet).Methods("GET")
 	r.HandleFunc("/api/sets/getall", controllers.GetAlSet).Methods("GET")
 	r.HandleFunc("/api/sets/getallroutine", controllers.GetAlSetRoutine).Methods("GET")
+	r.HandleFunc("/api/sets/put", controllers.PutSet).Methods("PUT")
+	r.HandleFunc("/api/sets/del", controllers.DelSet).Methods("DELETE")
 
 	//days handling
 	r.HandleFunc("/api/day/get", controllers.Getday).Methods("GET")

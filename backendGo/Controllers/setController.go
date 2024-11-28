@@ -23,7 +23,7 @@ func GetSet(w http.ResponseWriter, r *http.Request) { //Devuelve un único set, 
 		return
 	}
 
-	//Ahora mismo los sets no van a tener seguridad
+	//Ahora mismo los sets no van a tener seguridad con el userID
 	//userID, err := security.VerifyCookie(r)
 	_, err := security.VerifyCookie(r)
 	if err != nil {
@@ -92,4 +92,76 @@ func GetAlSetRoutine(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(set)
+}
+
+func PutSet(w http.ResponseWriter, r *http.Request) {
+	RoutineID := r.URL.Query().Get("RoutineID")
+	ExerciseID := r.URL.Query().Get("ExerciseID")
+	Set_number := r.URL.Query().Get("Set_number")
+	Weight := r.URL.Query().Get("Weight")
+	Reps := r.URL.Query().Get("Reps")
+
+	if RoutineID == "" {
+		http.Error(w, "RoutineID parameter is missing", http.StatusBadRequest)
+		return
+	} else if ExerciseID == "" {
+		http.Error(w, "ExerciseID parameter is missing", http.StatusBadRequest)
+		return
+	} else if Set_number == "" {
+		http.Error(w, "Set_number parameter is missing", http.StatusBadRequest)
+		return
+	} else if Weight == "" {
+		http.Error(w, "Weight parameter is missing", http.StatusBadRequest)
+		return
+	} else if Reps == "" {
+		http.Error(w, "Reps parameter is missing", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := security.VerifyCookie(r)
+	if err != nil {
+		http.Error(w, "Error Cookie", http.StatusNotFound)
+	}
+
+	err = driver.PutSet(RoutineID, ExerciseID, Set_number, Weight, Reps, userID)
+	if err != nil {
+		log.Printf("Error PUT Set driver: %s /n", err)
+		http.Error(w, "Error updating set", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Set updated "})
+}
+
+func DelSet(w http.ResponseWriter, r *http.Request) {
+	RoutineID := r.URL.Query().Get("RoutineID")
+	ExerciseID := r.URL.Query().Get("ExerciseID")
+	Set_number := r.URL.Query().Get("Set_number")
+
+	if RoutineID == "" {
+		http.Error(w, "RoutineID parameter is missing", http.StatusBadRequest)
+		return
+	} else if ExerciseID == "" {
+		http.Error(w, "ExerciseID parameter is missing", http.StatusBadRequest)
+		return
+	} else if Set_number == "" {
+		http.Error(w, "Set_number parameter is missing", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := security.VerifyCookie(r)
+	if err != nil {
+		http.Error(w, "Error Cookie", http.StatusNotFound)
+	}
+
+	erre := driver.DelSet(RoutineID, ExerciseID, Set_number, userID)
+	if erre != nil {
+		log.Printf("Error DEL Set driver: %s /n", err)
+		http.Error(w, "set not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Set deleted successfully"})
 }
