@@ -12,7 +12,7 @@ function MiGimnasio() {
       
     <View style={{  alignItems: 'center', justifyContent: 'center' }}>
       
-      <Text>Pantalla de Inicio</Text>
+      <Text style={styles.text}>Entrenamiento Recomendado</Text>
       
     
     </View>
@@ -26,9 +26,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
-  buttonText: {
+  text: {
     color: 'white',  // Color del texto
     fontWeight: 'bold',
+    fontSize: 17,
   },
   container:{
       backgroundColor: 'black',

@@ -94,11 +94,11 @@ const calculateStreak = (completedDays: { [key: string]: boolean }) => {
     <View style={styles.container}>
     <View style={styles.arrows}>
         <TouchableOpacity onPress={() => setCurrentWeek(subWeek(currentWeek))}>
-            <Arrow name="arrow-back" size={32} color="black" />
+            <Arrow name="arrow-back" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.tituloWeek}>{dayjs(currentWeek[0]).format('MMM YYYY')}</Text>
         <TouchableOpacity onPress={() => setCurrentWeek(addWeek(currentWeek))}>
-            <Arrow name="arrow-forward" size={32} color="black" />
+            <Arrow name="arrow-forward" size={32} color="white" />
         </TouchableOpacity>
     </View>
       
@@ -140,14 +140,16 @@ const styles = StyleSheet.create({
       
     },
     container: {
-      backgroundColor: 'grey',
+      backgroundColor: '#1C1C1E',
       borderRadius: 300, 
-      padding: '5%',
+      padding: '7%',
+      
     },
     arrows: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginHorizontal: 10,
+      color: 'white',
     }
     ,
     dayContainer: {
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
     completedText: {
       color: 'white',
     },tituloWeek: {
-        color: 'black',
+        color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
       fontSize: 16,
       fontWeight: 'bold',
-      color: 'black',
+      color: 'white',
       padding: 10,
     },
   });
