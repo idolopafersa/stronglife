@@ -8,7 +8,7 @@ import (
 func GetMeal(id string, userID int) (structmodels.Meal, error) {
 	var meal structmodels.Meal
 	//fmt.Printf("LLEGO AQUI con ID: %s \n", id)
-	query := "SELECT id, description, calories, proteins, fats, carbs, name FROM Meals WHERE id = ? user_id = ?"
+	query := "SELECT id, description, calories, proteins, fats, carbs, name FROM Meals WHERE id = ? AND user_id = ?"
 
 	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.Name, userID)
 	fmt.Print(err)
