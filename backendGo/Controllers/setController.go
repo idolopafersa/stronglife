@@ -2,6 +2,7 @@ package controllers
 
 import (
 	driver "backendgo/Driver"
+	structmodels "backendgo/StructModels"
 	"backendgo/security"
 	"encoding/json"
 	"log"
@@ -25,13 +26,13 @@ func GetSet(w http.ResponseWriter, r *http.Request) { //Devuelve un único set, 
 
 	//Ahora mismo los sets no van a tener seguridad con el userID
 	//userID, err := security.VerifyCookie(r)
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
 	//	set, err := driver.GetSet(RoutineId, ExerciseId, userID)
-	set, err := driver.GetSet(RoutineId, ExerciseId)
+	set, err := driver.GetSet(RoutineId, ExerciseId, userID)
 	if err != nil {
 		log.Printf("Error Getting Sets in driver: %s /n", err)
 		http.Error(w, "Couldnt get sets", 404)
@@ -53,12 +54,12 @@ func GetAlSet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Ahora mismo los sets no van a tener seguridad
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	set, err := driver.GetAlSet(RoutineId, ExerciseId)
+	set, err := driver.GetAlSet(RoutineId, ExerciseId, userID)
 	if err != nil {
 		log.Printf("Error Getting Sets in driver: %s /n", err)
 		http.Error(w, "Couldnt get sets", 404)
@@ -78,12 +79,12 @@ func GetAlSetRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	set, err := driver.GetAlSetRoutine(RoutineId)
+	set, err := driver.GetAlSetRoutine(RoutineId, userID)
 	if err != nil {
 		log.Printf("Error Getting Sets in driver: %s /n", err)
 		http.Error(w, "Couldnt get sets", 404)
@@ -94,44 +95,55 @@ func GetAlSetRoutine(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(set)
 }
 
-func PutSet(w http.ResponseWriter, r *http.Request) {
-	RoutineID := r.URL.Query().Get("RoutineID")
-	ExerciseID := r.URL.Query().Get("ExerciseID")
-	Set_number := r.URL.Query().Get("Set_number")
-	Weight := r.URL.Query().Get("Weight")
-	Reps := r.URL.Query().Get("Reps")
+func PostSet(w http.ResponseWriter, r *http.Request) {
+	var Set structmodels.Set
 
-	if RoutineID == "" {
-		http.Error(w, "RoutineID parameter is missing", http.StatusBadRequest)
-		return
-	} else if ExerciseID == "" {
-		http.Error(w, "ExerciseID parameter is missing", http.StatusBadRequest)
-		return
-	} else if Set_number == "" {
-		http.Error(w, "Set_number parameter is missing", http.StatusBadRequest)
-		return
-	} else if Weight == "" {
-		http.Error(w, "Weight parameter is missing", http.StatusBadRequest)
-		return
-	} else if Reps == "" {
-		http.Error(w, "Reps parameter is missing", http.StatusBadRequest)
-		return
+	if err := json.NewDecoder(r.Body).Decode(&Set); err != nil { //Recogemos el body, debe haber todo un Meal
+		http.Error(w, "Invalid payload", 400)
 	}
-
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	err = driver.PutSet(RoutineID, ExerciseID, Set_number, Weight, Reps, userID)
+	err = driver.PostSet(Set, userID)
 	if err != nil {
-		log.Printf("Error PUT Set driver: %s /n", err)
+		log.Printf("Error POST Set driver: %s /n", err)
 		http.Error(w, "Error updating set", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"message": "Set updated "})
+}
+
+func PutSet(w http.ResponseWriter, r *http.Request) {
+	var set structmodels.Set
+
+	// Decodificar el cuerpo de la solicitud
+	if err := json.NewDecoder(r.Body).Decode(&set); err != nil {
+		http.Error(w, "Invalid payload", http.StatusBadRequest)
+		return
+	}
+
+	// Verificar la cookie del usuario
+	userID, err := security.VerifyCookie(r)
+	if err != nil {
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Actualizar el set en la base de datos
+	err = driver.PutSet(set, userID)
+	if err != nil {
+		log.Printf("Error PUT Set driver: %s\n", err)
+		http.Error(w, "Error updating set", http.StatusInternalServerError)
+		return
+	}
+
+	// Responder con éxito
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Set updated"})
 }
 
 func DelSet(w http.ResponseWriter, r *http.Request) {

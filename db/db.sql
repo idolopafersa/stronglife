@@ -68,7 +68,7 @@ CREATE TABLE `Exercises` (
   PRIMARY KEY (`id`),
   KEY `fk_user_exercises` (`user_id`),
   CONSTRAINT `fk_user_exercises` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,9 +123,12 @@ CREATE TABLE `Meals` (
   `carbs` int(10) unsigned DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `isPublic` tinyint(1) NOT NULL DEFAULT 0,
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_meals_isPublic` (`isPublic`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `idx_meals_isPublic` (`isPublic`),
+  KEY `Meals_Users_FK` (`user_id`),
+  CONSTRAINT `Meals_Users_FK` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,32 +178,13 @@ CREATE TABLE `Routines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `NumLikes` int(11) DEFAULT NULL,
+  `numlikes` int(11) DEFAULT 0,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_User_Routines` (`user_id`),
   CONSTRAINT `FK_User_Routines` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_uca1400_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `set_numlikes_0` AFTER INSERT ON `Routines` FOR EACH ROW BEGIN
-      UPDATE Routines
-        SET numlikes = 0
-        WHERE id = NEW.id;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `Sets`
@@ -215,9 +199,12 @@ CREATE TABLE `Sets` (
   `set_number` int(11) NOT NULL,
   `reps` int(11) NOT NULL,
   `weight` decimal(5,2) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`routine_id`,`exercise_id`,`set_number`),
   KEY `routine_id` (`routine_id`),
   KEY `exercise_id` (`exercise_id`),
+  KEY `Sets_Exercise_User` (`user_id`,`exercise_id`),
+  CONSTRAINT `Sets_Exercise_User` FOREIGN KEY (`user_id`, `exercise_id`) REFERENCES `Exercises` (`user_id`, `id`),
   CONSTRAINT `fk_exercise_sets` FOREIGN KEY (`exercise_id`) REFERENCES `Exercises` (`id`),
   CONSTRAINT `fk_routine_sets` FOREIGN KEY (`routine_id`) REFERENCES `Routines` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -258,7 +245,7 @@ CREATE TABLE `Users` (
   `HasWorkedOut` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -270,4 +257,4 @@ CREATE TABLE `Users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2024-11-28 18:14:11
+-- Dump completed on 2024-11-29 21:13:58

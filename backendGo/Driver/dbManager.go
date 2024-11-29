@@ -17,7 +17,7 @@ func OpenDB() {
 	var err error
 	db, err = sql.Open("mysql", dbdirection)
 
-	fmt.Println("connecting to... %s", dbdirection)
+	fmt.Printf("connecting to... %s\n", dbdirection)
 	if err != nil {
 		pp := fmt.Sprintf("Couldn't open database.... %s", err)
 		panic(pp)

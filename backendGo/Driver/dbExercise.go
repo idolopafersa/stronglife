@@ -14,10 +14,10 @@ func GetExercise(id string) (structmodels.Exercise, error) {
 	return resul, err
 }
 
-func PostExercise(nexercise structmodels.NewExercise) (int, error) {
+func PostExercise(nexercise structmodels.NewExercise, userID int) (int, error) {
 
-	query := "INSERT INTO Exercises ( name, description) VALUES ( ?, ?)"
-	result, err := db.Exec(query, nexercise.Name, nexercise.Description)
+	query := "INSERT INTO Exercises ( name, description,user_id) VALUES ( ?, ?, ?)"
+	result, err := db.Exec(query, nexercise.Name, nexercise.Description, userID)
 
 	if err != nil {
 		fmt.Print(err)

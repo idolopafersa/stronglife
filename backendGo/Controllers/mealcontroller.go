@@ -19,12 +19,12 @@ func GetMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	meal, err := driver.GetMeal(id)
+	meal, err := driver.GetMeal(id, userID)
 
 	if err != nil {
 		log.Printf("Error GET Meals driver: %s /n", err)
@@ -45,12 +45,12 @@ func PostMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid payload", 400)
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	id, err := driver.PostMeal(nmeal)
+	id, err := driver.PostMeal(nmeal, userID)
 	if err != nil {
 		log.Printf("Error POST Meals driver: %s /n", err)
 		http.Error(w, "couldnt Post", http.StatusNotFound)

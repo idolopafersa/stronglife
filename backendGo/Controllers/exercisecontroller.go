@@ -12,7 +12,7 @@ import (
 
 func GetExercise(w http.ResponseWriter, r *http.Request) {
 	var exe structmodels.Exercise
-	
+
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
@@ -44,12 +44,12 @@ func PostExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	id, err := driver.PostExercise(exercise)
+	id, err := driver.PostExercise(exercise, userID)
 	if err != nil {
 		log.Printf("Error POST exercise driver : %s /n", err)
 		http.Error(w, "Error adding exercise", http.StatusInternalServerError)
