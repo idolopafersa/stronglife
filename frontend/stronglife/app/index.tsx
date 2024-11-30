@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Planificacion from '@/screens/Planifiacion';
 import Header from '@/components/Header';
 import Training from '@/screens/Training';
+import TabBar from '@/components/LittleComponents/TabBar';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,14 +24,24 @@ const App = () => {
           tabBarStyle: tabNavigatorStyles.tabBarStyle,
           tabBarLabelStyle: tabNavigatorStyles.tabBarLabelStyle,
           tabBarInactiveBackgroundColor: '#1C1C1E',
+          tabBarActiveBackgroundColor: '#1C1C1E',
         }}
+        tabBar={props => <TabBar {...props} />}
+      screenListeners={{
+        state: (e) => {
+          const route = e.data.state.routes[e.data.state.index];
+          if (route.name === 'Training') {
+            setejercicio(false);
+          } else {
+            setejercicio(true);
+          }
+        }
+      }}
       >
         <Tab.Screen 
           name="MiGimnasio" 
           component={MiGimnasio}
-          listeners={{
-            tabPress: () => setejercicio(true),
-              }}
+         
           options={{
         tabBarIcon: () => <Icon name="heartbeat" size={30} color="#A5D32D" />,
         tabBarLabel: 'Mi Gimnasio',
@@ -40,9 +51,7 @@ const App = () => {
         <Tab.Screen 
           name="MiCocina" 
           component={MiCocina}
-          listeners={{
-            tabPress: () => setejercicio(true),
-              }}
+         
           options={{
         tabBarIcon: () => <Icon name="cutlery" size={30} color="#A5D32D" />,
         tabBarLabel: 'Mi Cocina',
@@ -52,9 +61,7 @@ const App = () => {
         <Tab.Screen 
           name="Planifiacion" 
           component={Planificacion}
-          listeners={{
-            tabPress: () => setejercicio(true),
-              }}
+         
           options={{
         tabBarIcon: () => <Icon name="table" size={30} color="#A5D32D" />,
         tabBarLabel: 'Mi Planificacion',
@@ -63,13 +70,10 @@ const App = () => {
         />
         
         <Tab.Screen 
-          name="EntrenamientoPrueba" 
+          name="Training" 
           component={Training}
-          listeners={{
-        tabPress: () => setejercicio(false),
-          }}
           options={{
-        tabBarIcon: () => <Icon name="heartbeat" size={30} color="#A5D32D" />,
+        tabBarIcon: () => <Icon name="warning" size={30} color="#A5D32D" />,
         tabBarLabel: 'Mi Gimnasio',
         headerShown: false,
           }}
