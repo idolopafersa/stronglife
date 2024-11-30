@@ -15,46 +15,52 @@ func GetMeal(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
-		http.Error(w, "id parameter is missing", http.StatusBadRequest)
+		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
 		return
 	}
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
 
-	meal, err := driver.GetMeal(id, userID)
-
-	if err != nil {
-		log.Printf("Error GET Meals driver: %s /n", err)
+	meal, erre := driver.GetMeal(id, userID)
+	if erre != nil {
+		if erre.Error() == "forbidden: user does not have access to this meal" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		log.Printf("Error GET meal driver: %s\n", erre)
 		http.Error(w, "Meal not found", http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(meal)
-
 }
 
 func PostMeal(w http.ResponseWriter, r *http.Request) {
-	var nmeal structmodels.NewMeal
+	var meal structmodels.NewMeal
 
-	if err := json.NewDecoder(r.Body).Decode(&nmeal); err != nil { //Recogemos el body, debe haber todo un Meal
-		http.Error(w, "Invalid payload", 400)
+	if err := json.NewDecoder(r.Body).Decode(&meal); err != nil {
+		http.Error(w, "Invalid payload", http.StatusBadRequest)
+		return
 	}
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
 
-	id, err := driver.PostMeal(nmeal, userID)
+	id, err := driver.PostMeal(meal, userID)
 	if err != nil {
-		log.Printf("Error POST Meals driver: %s /n", err)
-		http.Error(w, "couldnt Post", http.StatusNotFound)
+		log.Printf("Error POST meal driver: %s\n", err)
+		http.Error(w, "Error adding meal", http.StatusInternalServerError)
+		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(id)
 }
@@ -63,44 +69,58 @@ func DelMeal(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
-		http.Error(w, "id parameter is missing", http.StatusBadRequest)
+		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
 
-	erre := driver.DelMeal(id)
+	erre := driver.DelMeal(id, userID)
 	if erre != nil {
-		log.Printf("Error DEL Meals driver: %s /n", erre)
-		http.Error(w, "No Meal", http.StatusNotFound)
+		if erre.Error() == "forbidden: user does not have access to this meal" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		log.Printf("Error DEL meal driver: %s\n", erre)
+		http.Error(w, "Meal not found", http.StatusNotFound)
+		return
 	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func PutMeal(w http.ResponseWriter, r *http.Request) {
 	var meal structmodels.Meal
 
 	if err := json.NewDecoder(r.Body).Decode(&meal); err != nil {
-		http.Error(w, "Payload inválido", http.StatusBadRequest)
+		http.Error(w, "Invalid payload", http.StatusBadRequest)
 		fmt.Print(err)
 		return
 	}
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
-	}
-
-	erre := driver.UpdateMeal(meal)
-	if erre != nil {
-		log.Printf("Error PUT Meals driver: %s /n", erre)
-		http.Error(w, "Error al actualizar la comida", http.StatusInternalServerError)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
 		return
 	}
+
+	erre := driver.UpdateMeal(meal, userID)
+	if erre != nil {
+		if erre.Error() == "forbidden: user does not have access to this meal" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		log.Printf("Error PUT meal driver: %s\n", erre)
+		http.Error(w, "Error updating meal", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"message": "Comida actualizada exitosamente"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Meal updated successfully"})
 }
 
 func AllMeals(w http.ResponseWriter, r *http.Request) {

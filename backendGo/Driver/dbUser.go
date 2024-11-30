@@ -51,8 +51,7 @@ func UserExists(username string) bool {
 func CorrectPassword(username, password string) bool {
 	var aldb []byte
 	query := ("SELECT password_hash FROM Users WHERE username = ?")
-	fmt.Println(username)
-	fmt.Println(password)
+
 	db.QueryRow(query, username).Scan(&aldb)
 
 	if err := bcrypt.CompareHashAndPassword(aldb, []byte(password)); err != nil {

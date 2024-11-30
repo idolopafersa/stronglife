@@ -6,8 +6,6 @@ import (
 	"fmt"
 )
 
-// Declarar una variable global para la conexión a la base de datos
-
 func AddExerciseToRoutine(routineID, exerciseID string, userID int) error {
 	var name string
 
@@ -15,7 +13,7 @@ func AddExerciseToRoutine(routineID, exerciseID string, userID int) error {
 	err := db.QueryRow("SELECT name FROM Routines WHERE id = ? AND user_id = ?", routineID, userID).Scan(&name)
 	if err == sql.ErrNoRows {
 		fmt.Println("No routine found with that ID for the current user")
-		return fmt.Errorf("routine not found")
+		return fmt.Errorf("forbidden: user does not have access to this routine")
 	} else if err != nil {
 		return fmt.Errorf("query error: %v", err)
 	}
@@ -38,7 +36,7 @@ func RemoveExerciseFromRoutine(routineID, exerciseID string, userID int) error {
 	err := db.QueryRow("SELECT name FROM Routines WHERE id = ? AND user_id = ?", routineID, userID).Scan(&name)
 	if err == sql.ErrNoRows {
 		fmt.Println("No routine found with that ID for the current user")
-		return fmt.Errorf("routine not found")
+		return fmt.Errorf("forbidden: user does not have access to this routine")
 	} else if err != nil {
 		return fmt.Errorf("query error: %v", err)
 	}

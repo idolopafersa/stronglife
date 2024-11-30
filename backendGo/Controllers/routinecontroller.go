@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func PostRoutine(w http.ResponseWriter, r *http.Request) {
@@ -21,12 +22,13 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
 
 	id, err := driver.PostRoutine(routine, userID)
 	if err != nil {
-		log.Printf("Error POST Routine driver: %s /n", err)
+		log.Printf("Error POST Routine driver: %s\n", err)
 		http.Error(w, "Error creating routine", http.StatusInternalServerError)
 		return
 	}
@@ -36,21 +38,26 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRoutine(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("routine_id")
 
 	if id == "" {
-		http.Error(w, "id parameter is missing", http.StatusBadRequest)
+		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
 		return
 	}
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
-
-	routine, err := driver.GetRoutine(id, userID)
+	intID, _ := strconv.Atoi(id)
+	routine, err := driver.GetRoutine(intID, userID)
 	if err != nil {
-		log.Printf("Error GET Routine driver: %s /n", err)
+		if err.Error() == "forbidden: user does not have access to this routine" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		log.Printf("Error GET Routine driver: %s\n", err)
 		http.Error(w, "Routine not found", http.StatusNotFound)
 		return
 	}
@@ -69,40 +76,51 @@ func PutRoutine(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
 
-	errw := driver.PutRoutine(routine, userID)
-	if errw != nil {
-		log.Printf("Error PUT Routine driver: %s /n", err)
+	err = driver.PutRoutine(routine, userID)
+	if err != nil {
+		if err.Error() == "forbidden: user does not have access to this routine" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		log.Printf("Error PUT Routine driver: %s\n", err)
 		http.Error(w, "Error updating routine", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"message": "Routine updated "})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Routine updated"})
 }
 
 func DelRoutine(w http.ResponseWriter, r *http.Request) {
-
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("routine_id")
 
 	if id == "" {
-		http.Error(w, "id parameter is missing", http.StatusBadRequest)
+		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
 		return
 	}
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
 	}
 
 	erre := driver.DelRoutine(id, userID)
 	if erre != nil {
-		log.Printf("Error DEL Routine driver: %s /n", err)
-		http.Error(w, "routine not found", http.StatusNotFound)
+		if erre.Error() == "forbidden: user does not have access to this routine" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		log.Printf("Error DEL Routine driver: %s\n", err)
+		http.Error(w, "Routine not found", http.StatusNotFound)
 		return
 	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func AllRoutines(w http.ResponseWriter, r *http.Request) {

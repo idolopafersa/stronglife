@@ -38,7 +38,7 @@ func CheckImageType(file multipart.File) error {
 }
 
 func UploadMealImage(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("meal_id")
 
 	if id == "" {
 		http.Error(w, "id parameter is missing", http.StatusBadRequest)
@@ -80,7 +80,7 @@ func UploadMealImage(w http.ResponseWriter, r *http.Request) {
 
 // GetMealImage obtiene la imagen de la comida
 func GetMealImage(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("meal_id")
 	if id == "" {
 		http.Error(w, "meal ID is required", http.StatusBadRequest)
 		return
@@ -100,7 +100,7 @@ func GetMealImage(w http.ResponseWriter, r *http.Request) {
 
 // UploadExerciseImage carga la imagen de ejercicio
 func UploadExerciseImage(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("exercise_id")
 
 	if id == "" {
 		http.Error(w, "id parameter is missing", http.StatusBadRequest)
@@ -142,7 +142,7 @@ func UploadExerciseImage(w http.ResponseWriter, r *http.Request) {
 
 // GetExerciseImage obtiene la imagen de ejercicio
 func GetExerciseImage(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("exercise_id")
 	if id == "" {
 		http.Error(w, "ID is required", http.StatusBadRequest)
 		return
@@ -162,7 +162,7 @@ func GetExerciseImage(w http.ResponseWriter, r *http.Request) {
 
 // UploadRoutineImage carga la imagen de rutina
 func UploadRoutineImage(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("routine_id")
 
 	if id == "" {
 		http.Error(w, "id parameter is missing", http.StatusBadRequest)
@@ -204,7 +204,7 @@ func UploadRoutineImage(w http.ResponseWriter, r *http.Request) {
 
 // GetRoutineImage obtiene la imagen de rutina
 func GetRoutineImage(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("routine_id")
 	if id == "" {
 		http.Error(w, "ID is required", http.StatusBadRequest)
 		return
@@ -219,5 +219,67 @@ func GetRoutineImage(w http.ResponseWriter, r *http.Request) {
 
 	// Servir el archivo como una imagen
 	w.Header().Set("Content-Type", "image/jpeg") // Cambiar a "image/jpeg"
+	http.ServeFile(w, r, path)
+}
+
+func UploadUserImage(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("user_id")
+
+	if id == "" {
+		http.Error(w, "id parameter is missing", http.StatusBadRequest)
+		return
+	}
+
+	err := CheckSize(w, r)
+	if err != nil {
+		log.Printf("Error Uploading image, max size: %s", err)
+		http.Error(w, "File too big", http.StatusBadRequest)
+		return
+	}
+
+	file, _, err := r.FormFile("image")
+	if err != nil {
+		log.Printf("Error uploading User image: %s", err)
+		http.Error(w, "Error retrieving file", http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
+
+	if err := CheckImageType(file); err != nil {
+		log.Printf("Error uploading User image: %s", err)
+		http.Error(w, "Invalid image type", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	filepath := fmt.Sprintf("./assets/users/user-%s.jpg", id)
+
+	if err := driver.UploadImage(id, filepath, file); err != nil {
+		log.Printf("Error Uploading User image driver: %s", err)
+		http.Error(w, "couldn't upload image", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(`{"message": "Image uploaded successfully"}`))
+}
+
+// GetUserImage obtiene la imagen de usuario
+func GetUserImage(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("user_id")
+
+	if id == "" {
+		http.Error(w, "user ID is required", http.StatusBadRequest)
+		return
+	}
+	path := fmt.Sprintf("./assets/users/user-%s.jpg", id)
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		log.Printf("Error getting User Image: %s", err)
+		http.Error(w, "image not found", http.StatusNotFound)
+		return
+	}
+
+	// Servir el archivo como una imagen
+	w.Header().Set("Content-Type", "image/jpeg")
 	http.ServeFile(w, r, path)
 }

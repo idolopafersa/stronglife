@@ -27,6 +27,8 @@ func main() {
 	r.HandleFunc("/api/login", controllers.Login).Methods("POST")
 	r.HandleFunc("/api/logout", controllers.Logout).Methods("GET")
 	r.HandleFunc("/api/user/register", controllers.CreateUser).Methods("POST")
+	r.HandleFunc("/api/user/uploadimage", controllers.UploadUserImage).Methods("POST")
+	r.HandleFunc("/api/user/getimage", controllers.GetUserImage).Methods("GET")
 	//r.HandleFunc("/api/cookie", security.VerifyCookie).Methods("GET")
 
 	//Para las comidas, deberemos hacer un get post  put y remove

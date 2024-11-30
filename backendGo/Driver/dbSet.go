@@ -2,108 +2,164 @@ package driver
 
 import (
 	structmodels "backendgo/StructModels"
+	"database/sql"
 	"fmt"
+	"log"
 )
 
-func GetSet(routineID, exerciseID string, userID int) (structmodels.Set, error) {
-	// Uso LIMIT 1 para devolver unicamente un valor, despues habria que hacer un order
-	// habra que asignar un usuario o verificar de que rutina se pide (ya que va asociado a un user)
+func GetSet(routineID, exerciseID, setNumber string, userID int) (structmodels.Set, error) {
+	var set structmodels.Set
+	var ownerID int
 
-	var Set structmodels.Set //estructura set
-	//query_user := "SELECT id FROM Routines WHERE user_id = ?"
-	//err := db.QueryRow(query_user, routineID).Scan(&Set.RoutineID)
-
-	query := fmt.Sprintf("SELECT  routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = ? AND exercise_id = ? AND user_id = %d LIMIT 1", userID)
-	err := db.QueryRow(query, routineID, exerciseID).Scan(&Set.Set_number, &Set.Reps, &Set.Weight, &Set.RoutineID, &Set.ExerciseID)
-
+	query := "SELECT routine_id, exercise_id, set_number, reps, weight, user_id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
+	err := db.QueryRow(query, routineID, exerciseID, setNumber).Scan(&set.RoutineID, &set.ExerciseID, &set.Set_number, &set.Reps, &set.Weight, &ownerID)
 	if err != nil {
-		fmt.Println("Error getting set", err)
-		return Set, err
+		if err == sql.ErrNoRows {
+			return set, fmt.Errorf("no set found with the given routine_id, exercise_id, and set_number")
+		}
+		return set, fmt.Errorf("error querying set: %v", err)
 	}
-	return Set, nil
+
+	if ownerID != userID {
+		return set, fmt.Errorf("forbidden: user does not have access to this set")
+	}
+
+	return set, nil
 }
 
 func GetAlSet(routineID, exerciseID string, userID int) ([]structmodels.Set, error) {
+	var sets []structmodels.Set
 
-	var Sets []structmodels.Set
-	query := fmt.Sprintf("SELECT  routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = %s AND exercise_id = %s AND user_id = %d ;", routineID, exerciseID, userID)
-	rows, err := db.Query(query)
-
+	query := "SELECT routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = ? AND exercise_id = ? AND user_id = ?"
+	rows, err := db.Query(query, routineID, exerciseID, userID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error querying sets: %v", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var Set structmodels.Set
-		if err := rows.Scan(&Set.RoutineID, &Set.ExerciseID, &Set.Set_number, &Set.Reps, &Set.Weight); err != nil {
-			return nil, err
+		var set structmodels.Set
+		if err := rows.Scan(&set.RoutineID, &set.ExerciseID, &set.Set_number, &set.Reps, &set.Weight); err != nil {
+			return nil, fmt.Errorf("error scanning set: %v", err)
 		}
-		Sets = append(Sets, Set)
+		sets = append(sets, set)
 	}
 
-	return Sets, nil
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error with rows: %v", err)
+	}
+
+	return sets, nil
 }
 
 func GetAlSetRoutine(routineID string, userID int) ([]structmodels.Set, error) {
+	var sets []structmodels.Set
 
-	var Sets []structmodels.Set
-	query := fmt.Sprintf("SELECT  routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = %s; AND user_id = %d", routineID, userID)
-	rows, err := db.Query(query)
-
+	query := "SELECT routine_id, exercise_id, set_number, reps, weight FROM Sets WHERE routine_id = ? AND user_id = ?"
+	rows, err := db.Query(query, routineID, userID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error querying sets: %v", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var Set structmodels.Set
-		if err := rows.Scan(&Set.RoutineID, &Set.ExerciseID, &Set.Set_number, &Set.Reps, &Set.Weight); err != nil {
-			return nil, err
+		var set structmodels.Set
+		if err := rows.Scan(&set.RoutineID, &set.ExerciseID, &set.Set_number, &set.Reps, &set.Weight); err != nil {
+			return nil, fmt.Errorf("error scanning set: %v", err)
 		}
-		Sets = append(Sets, Set)
+		sets = append(sets, set)
 	}
 
-	return Sets, nil
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error with rows: %v", err)
+	}
+
+	return sets, nil
 }
 
-func PutSet(Set structmodels.Set, userID int) error {
-	query := fmt.Sprintf(`UPDATE Sets SET reps = ?, weight = ? WHERE routine_id = ? AND exercise_id = ? AND user_id= %d AND set_number = ? AND id = ?`, userID)
-	_, err := db.Exec(query, Set.Reps, Set.Weight, Set.RoutineID, Set.ExerciseID, Set.Set_number)
-
+func PutSet(set structmodels.Set, userID int) error {
+	var ownerID int
+	query := "SELECT user_id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
+	err := db.QueryRow(query, set.RoutineID, set.ExerciseID, set.Set_number).Scan(&ownerID)
 	if err != nil {
-		fmt.Println("Error updating set:", err)
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("no set found with the given routine_id, exercise_id, and set_number")
+		}
+		return fmt.Errorf("error querying set: %v", err)
+	}
+
+	if ownerID != userID {
+		return fmt.Errorf("forbidden: user does not have access to this set")
+	}
+
+	query = "UPDATE Sets SET reps = ?, weight = ? WHERE routine_id = ? AND exercise_id = ? AND user_id = ? AND set_number = ?"
+	_, err = db.Exec(query, set.Reps, set.Weight, set.RoutineID, set.ExerciseID, userID, set.Set_number)
+	if err != nil {
+		log.Printf("Error updating set: %v", err)
 		return err
 	}
 	return nil
 }
 
-func PostSet(Set structmodels.Set, userID int) error {
-	query := `
-        INSERT INTO Sets (routine_id, exercise_id, set_number, weight, reps, user_id) 
-        VALUES (?, ?, ?, ?, ?, ?)
-    `
-	_, err := db.Exec(query, Set.RoutineID, Set.ExerciseID, Set.Set_number, Set.Weight, Set.Reps, userID)
+func PostSet(set structmodels.Set, userID int) error {
+	// Verificar si el usuario es el dueño de la rutina y el ejercicio
+	var routineOwnerID, exerciseOwnerID int
+	query := "SELECT user_id FROM Routines WHERE id = ?"
+	err := db.QueryRow(query, set.RoutineID).Scan(&routineOwnerID)
 	if err != nil {
-		fmt.Println("Error inserting set:", err)
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("no routine found with the given id")
+		}
+		return fmt.Errorf("error querying routine: %v", err)
+	}
+
+	if routineOwnerID != userID {
+		return fmt.Errorf("forbidden: user does not have access to this routine")
+	}
+
+	query = "SELECT user_id FROM Exercises WHERE id = ?"
+	err = db.QueryRow(query, set.ExerciseID).Scan(&exerciseOwnerID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("no exercise found with the given id")
+		}
+		return fmt.Errorf("error querying exercise: %v", err)
+	}
+
+	if exerciseOwnerID != userID {
+		return fmt.Errorf("forbidden: user does not have access to this exercise")
+	}
+
+	query = "INSERT INTO Sets (routine_id, exercise_id, set_number, weight, reps, user_id) VALUES (?, ?, ?, ?, ?, ?)"
+	_, err = db.Exec(query, set.RoutineID, set.ExerciseID, set.Set_number, set.Weight, set.Reps, userID)
+	if err != nil {
+		log.Printf("Error inserting set: %v", err)
 		return err
 	}
 	return nil
 }
 
-func DelSet(RoutineID, ExerciseID, Set_number string, userID int) error {
+func DelSet(routineID, exerciseID, setNumber string, userID int) error {
 	var setID int
-	var dbUserID int
-	queryGetID := "SELECT id , user_id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
-	db.QueryRow(queryGetID, RoutineID, ExerciseID, Set_number).Scan(&setID, &dbUserID)
-
-	if dbUserID != userID {
-		return fmt.Errorf("userID does not match the owner of the set")
+	var ownerID int
+	query := "SELECT id, user_id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
+	err := db.QueryRow(query, routineID, exerciseID, setNumber).Scan(&setID, &ownerID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("no set found with the given routine_id, exercise_id, and set_number")
+		}
+		return fmt.Errorf("error querying set: %v", err)
 	}
 
-	query := "DELETE FROM Sets WHERE id = ?;"
-	_, err := db.Exec(query, setID)
-	fmt.Print(err)
+	if ownerID != userID {
+		return fmt.Errorf("forbidden: user does not have access to this set")
+	}
 
-	return err
+	query = "DELETE FROM Sets WHERE id = ?"
+	_, err = db.Exec(query, setID)
+	if err != nil {
+		log.Printf("Error deleting set: %v", err)
+		return err
+	}
+	return nil
 }
