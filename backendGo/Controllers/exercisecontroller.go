@@ -134,7 +134,7 @@ func GetAlExercises(w http.ResponseWriter, r *http.Request) {
 	exercises, erre := driver.GetAlExercises(userID)
 	if erre != nil {
 		log.Printf("Error GET all exercises  driver: %s /n", err)
-		http.Error(w, "routine not found", http.StatusNotFound)
+		http.Error(w, "exerccise not found", http.StatusNotFound)
 		return
 	}
 

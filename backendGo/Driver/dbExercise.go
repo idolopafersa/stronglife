@@ -107,9 +107,9 @@ func PutExercise(newexercise structmodels.Exercise, userID int) error {
 
 func GetAlExercises(userID int) ([]structmodels.Exercise, error) {
 	var exercises []structmodels.Exercise
-	query := fmt.Sprintf("SELECT * FROM Exercises WHERE user_id = %d", userID)
+	query := "SELECT * FROM Exercises WHERE user_id = ?"
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, userID)
 	if err != nil {
 
 		return nil, err
