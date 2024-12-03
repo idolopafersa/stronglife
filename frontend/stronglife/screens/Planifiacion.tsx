@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-
+import Formulario from '@/components/Formulario';
 import {TouchableOpacity, Text, View, Button ,StyleSheet,Image} from 'react-native';
 
 
@@ -11,10 +11,10 @@ function Planificacion() {
     
       
       
-    <View style={{  alignItems: 'center', justifyContent: 'center' }}>
+    <View>
       
       <Text>Pantalla de Inicio</Text>
-      
+      <Formulario/>
     
     </View>
     </View>
