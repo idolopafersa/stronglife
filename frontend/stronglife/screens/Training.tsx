@@ -16,12 +16,16 @@ function Training() {
       
       <Text style={styles.subTitle}>Siguiente: <Text style={{color: 'grey'}}>Aerobics-Sets (1/1)</Text></Text>
     </View>
-      <View style={styles.ejercicios} >
-      <ImageBackground
+      <View style={styles.foto}>
+      <ImageBackground  
     source={require('@/assets/images/churum.png')}
-    
+    resizeMode="cover" style={styles.foto}
   >
+        <View style={styles.ejercicioscont}>
         <Text style={styles.ejercicios}>Ejercicios</Text>
+        <Text style={styles.ejercicios}>Restantes</Text>
+        <Text style={styles.repeticiones}>3 Repeticiones</Text>
+        </View>
       </ImageBackground>  
       </View>
     </View>
@@ -30,6 +34,8 @@ function Training() {
 const styles = StyleSheet.create({
     container:{
       backgroundColor: 'black',
+      
+      
       flex: 1,
       },subcontainer:{
         backgroundColor: '#3A3A3C',
@@ -55,14 +61,32 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
       },ejercicios:{
-        flexDirection: 'column',
-        fontSize: 40,
-        color: 'red',
+        fontSize: 42,
+        lineHeight: 84,
         fontWeight: 'bold',
-        flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      }
+        textAlign: 'center',
+        backgroundColor: '#000000c0',
+        color:'red',
+      },
+      ejercicioscont:{
+        alignItems: 'center',
+        
+        borderColor: 'yellow',
+        borderWidth: 2,
+      },
+      foto:{
+        resizeMode: 'stretch',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        textAlign: 'center',
+      },
+      repeticiones:{
+        color:'red',
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'right'
+      },
    
 });
 export default Training;
