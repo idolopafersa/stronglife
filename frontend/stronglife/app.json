@@ -3,7 +3,6 @@
     "name": "stronglife",
     "slug": "stronglife",
     "version": "1.0.0",
-    "sdkversion": "51.0.37",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",

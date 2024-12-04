@@ -1,27 +1,20 @@
 import React,{useState} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import Formulario from '@/components/Formulario';
 import {TouchableOpacity, Text, View, Button ,StyleSheet,Image} from 'react-native';
-import Calendar from './LittleComponents/Calendar';
-import CustomButton from './LittleComponents/CustomButton';
 
-function HomeScreen() {
+
+function Planificacion() {
    
   return (
 
     <View style={styles.container}>
     
-      <Calendar/>
       
-    <View style={{  alignItems: 'center', justifyContent: 'center' }}>
+      
+    <View>
       
       <Text>Pantalla de Inicio</Text>
-      <CustomButton
-        title = "homero chino"
-        handlePress={() => {}}
-        
-        />
-
+      <Formulario/>
     
     </View>
     </View>
@@ -44,4 +37,4 @@ const styles = StyleSheet.create({
       },
    
 });
-export default HomeScreen;
+export default Planificacion;
