@@ -1,7 +1,16 @@
-import React from 'react';
-import { View, Text, ImageBackground, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ImageBackground, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import BotonesSelector from '@/components/BotonesSelector';
+import { Picker } from '@react-native-picker/picker';
 
-function Training() {
+const Training = () => {
+  const [kilos, setKilos] = useState(0);
+  const [repeticiones, setRepeticiones] = useState(0);
+  const [showKilosPicker, setShowKilosPicker] = useState(false);
+  const pesos = Array.from({ length: 181 }, (_, i) => 20 + i);
+
+  const closeModal = () => setShowKilosPicker(false);
+
   return (
     <View style={styles.container}>
       <View>
@@ -27,15 +36,48 @@ function Training() {
               </Text>
               <View style={styles.repeticionesContainer}>
                 <Text style={styles.repeticiones}>3 Repeticiones</Text>
-                <Text style={styles.kilos}>50 kilos</Text>
+                <Text style={styles.kilos}>{kilos} kilos</Text>
               </View>
             </View>
           </View>
         </ImageBackground>
       </View>
+      <Text>Kilos: {kilos}</Text>
+      <Text>Repeticiones: {repeticiones}</Text>
+      <BotonesSelector 
+        onIncrementarKilos={() => setShowKilosPicker(true)} 
+        onIncrementarRepeticiones={() => {}} 
+      />
+
+     
+      <Modal
+        transparent
+        visible={showKilosPicker}
+        animationType="slide"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Selecciona los Kilos</Text>
+            <Picker
+              selectedValue={kilos}
+              onValueChange={(itemValue) => setKilos(itemValue)}
+              style={styles.picker}
+              
+            >
+              {pesos.map((kg) => (
+                <Picker.Item key={kg} label={`${kg} kg`} value={kg} />
+              ))}
+            </Picker>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -67,18 +109,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  
   imageBackground: {
     flex: 1,
     width: '100%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    
-        
   },
   ejercicioscont: {
-    
     padding: 10,
     alignItems: 'center',
     position: 'relative',
@@ -108,6 +146,39 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 55,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 20,
+    color: 'white',
+  },
+  picker: {
+    width: '100%',
+    height: 200,
+    color: 'white',
+  },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: '#FF6347',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 
