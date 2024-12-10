@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     },
     container: {
       backgroundColor: '#1C1C1E',
-      borderRadius: 300, 
+      borderRadius: 20, 
       padding: '7%',
       
     },
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       marginHorizontal: 5,
+      padding: 5,
     },
     currentDay: {
       backgroundColor: '#orange', 
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#A5D32D', 
     },
     notCompleted: {
-      backgroundColor: '#F5F5F5', 
+      backgroundColor: '#1C1C1E', 
       borderWidth: 1,
       borderColor: '#D3D3D3', 
     },
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
       },
     notCompletedText: {
-      color: 'black',
+      color: 'white',
     },
     checkIcon: {
       position: 'absolute',

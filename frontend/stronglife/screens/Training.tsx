@@ -25,7 +25,7 @@ const Training = () => {
       </View>
       <View style={styles.imageBackground}>
         <ImageBackground
-          source={require('@/assets/images/trice.png')}
+          source={require('@/assets/images/trice2.jpeg')}
           resizeMode="cover"
           style={styles.imageBackground}
         >
