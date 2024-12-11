@@ -9,7 +9,7 @@ const Header = () => {
       {showContent ? (
         <>
           <View style={styles.textContainer}>
-            <Text style={styles.headerName}>Hello Paco</Text>
+            <Text style={styles.headerName}>Hello Jose</Text>
             <Text style={styles.subTitle}>Let's start your day !</Text>
           </View>
           <Image
