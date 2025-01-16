@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
 const Header = () => {
-  const [showContent, setShowContent] = useState(true);
-
   return (
     <View style={styles.headerContainer}>
-      {showContent ? (
-        <>
-          <View style={styles.textContainer}>
-            <Text style={styles.headerName}>Hello Jose</Text>
-            <Text style={styles.subTitle}>Let's start your day !</Text>
-          </View>
-          <Image
-            source={require('@/assets/images/churum.png')}
-            style={styles.profileImage}
-          />
-        </>
-      ) : (
-        <Text>Hola Mundo</Text>
-      )}
+      <View style={styles.textContainer}>
+        <Text style={styles.headerName}>Hello Jose</Text>
+        <Text style={styles.subTitle}>Let's start your day!</Text>
+      </View>
+      <Image
+        source={require('@/assets/images/churum.png')}
+        style={styles.profileImage}
+      />
     </View>
   );
 };

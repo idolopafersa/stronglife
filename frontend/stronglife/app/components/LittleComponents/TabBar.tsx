@@ -1,20 +1,30 @@
 import React from "react";
 import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs';
+import { BottomTabDescriptorMap } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
+import { NavigationHelpers, ParamListBase, TabNavigationState } from '@react-navigation/native';
 
-export default props => {
-  const {
-    state,
-    descriptors,
-    navigation,
-    activeBackgroundColor,
-    activeTintColor,
-    inactiveBackgroundColor,
-    inactiveTintColor
-    ,
-  } = props;
-  
+interface TabBarProps {
+  state: TabNavigationState<ParamListBase>;
+  descriptors: BottomTabDescriptorMap;
+  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+  activeBackgroundColor?: string;
+  activeTintColor?: string;
+  inactiveBackgroundColor?: string;
+  inactiveTintColor?: string;
+}
+
+const TabBar: React.FC<TabBarProps> = ({
+  state,
+  descriptors,
+  navigation,
+  activeBackgroundColor = '#1C1C1E',
+  activeTintColor = 'white',
+  inactiveBackgroundColor = '#1C1C1E',
+  inactiveTintColor = 'gray',
+}) => {
   const { routes } = state;
-  
+
   return (
     <SafeAreaView>
       <View
@@ -23,14 +33,14 @@ export default props => {
           height: 64,
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: "#1C1C1E"
+          backgroundColor: "#1C1C1E",
         }}
       >
         {routes.map((route, index) => {
           const { options } = descriptors[route.key];
 
           const label =
-            options.tabBarLabel !== undefined
+            typeof options.tabBarLabel === 'string'
               ? options.tabBarLabel
               : options.title !== undefined
               ? options.title
@@ -45,7 +55,6 @@ export default props => {
 
           const onPress = () => {
             navigation.navigate(route.name);
-            
           };
 
           return (
@@ -60,12 +69,12 @@ export default props => {
                 paddingRight: 16,
                 paddingLeft: 16,
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
               onPress={onPress}
             >
               {options.tabBarIcon !== undefined &&
-                options.tabBarIcon({ color: tintColor, size: 28 })}
+                options.tabBarIcon({ focused: isFocused, color: tintColor, size: 28 })}
               {isFocused && (
                 <Text
                   style={{
@@ -84,3 +93,5 @@ export default props => {
     </SafeAreaView>
   );
 };
+
+export default TabBar;

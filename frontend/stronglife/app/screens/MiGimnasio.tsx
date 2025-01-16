@@ -1,10 +1,9 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import Calendar from '@/components/Calendar';
-import Icon from "react-native-vector-icons/FontAwesome5"
+import Calendar from '../components/Calendar';
+import Icon from "react-native-vector-icons/FontAwesome5";
 
-
-function MiGimnasio() {
+const MiGimnasio = () => {
   return (
     <View style={styles.container}>
       <Calendar />
@@ -12,9 +11,7 @@ function MiGimnasio() {
         <Text style={styles.text}>Entrenamiento Recomendado</Text>
         <View style={styles.trainingBox}>
           <Text style={styles.trainingName}>Push Workout</Text>
-          <Text style={styles.trainingDetails}>
-            6 Ejercicios
-          </Text>
+          <Text style={styles.trainingDetails}>6 Ejercicios</Text>
           <View style={styles.exerciseDetails}>
             <TouchableOpacity style={styles.startButton} onPress={() => {}}>
               <Text style={styles.buttonText}>Empezar</Text>
@@ -24,12 +21,11 @@ function MiGimnasio() {
             <Icon name="fire" size={20} color="tomato" style={styles.fireIcon} />
             <Text style={styles.timeText}>30 min</Text>
           </View>
-         
         </View>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -65,9 +61,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: '100%',
     marginBottom: 10,
-    display: 'flex',
-    
-
   },
   trainingDetails: {
     color: 'grey',
@@ -75,7 +68,7 @@ const styles = StyleSheet.create({
   },
   startButton: {
     backgroundColor: '#A5D32D',
-    paddingVertical: 15, 
+    paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
   },

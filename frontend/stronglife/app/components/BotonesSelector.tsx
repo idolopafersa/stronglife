@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, Button, StyleSheet, Dimensions } from 'react-native';
 
-const BotonesSelector = ({ onIncrementarKilos, onIncrementarRepeticiones }) => {
+interface BotonesSelectorProps {
+  onIncrementarKilos: () => void;
+  onIncrementarRepeticiones: () => void;
+}
+
+const BotonesSelector: React.FC<BotonesSelectorProps> = ({ onIncrementarKilos, onIncrementarRepeticiones }) => {
   return (
     <View style={styles.footerContainer}>
       <View style={styles.buttonContainer}>

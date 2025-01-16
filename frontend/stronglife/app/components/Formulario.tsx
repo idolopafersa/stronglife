@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import {Login,Register} from '@/utils/Usuario';
+import { Login } from '@/utils/Usuario';
 
 const Formulario: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-      Register(email, password);
+  const handleLogin = async () => {
+    try {
+      const response = await Login(email, password);
+      // Handle successful login response
+      Alert.alert('Login Successful', `Welcome ${response.usuario}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Login Failed', error.message);
+      } else {
+        Alert.alert('Login Failed', 'An unknown error occurred');
+      }
     }
+  };
 
   return (
     <View style={styles.container}>

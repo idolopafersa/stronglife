@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ImageBackground, StyleSheet, Modal, TouchableOpacity } from 'react-native';
-import BotonesSelector from '@/components/BotonesSelector';
+import BotonesSelector from '../components/BotonesSelector';
 import { Picker } from '@react-native-picker/picker';
 
 const Training = () => {
@@ -49,7 +49,6 @@ const Training = () => {
         onIncrementarRepeticiones={() => {}} 
       />
 
-     
       <Modal
         transparent
         visible={showKilosPicker}
@@ -63,7 +62,6 @@ const Training = () => {
               selectedValue={kilos}
               onValueChange={(itemValue) => setKilos(itemValue)}
               style={styles.picker}
-              
             >
               {pesos.map((kg) => (
                 <Picker.Item key={kg} label={`${kg} kg`} value={kg} />
