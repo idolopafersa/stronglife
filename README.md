@@ -1,7 +1,7 @@
 
-# 💪 StrongLife
+# 💪 ToFuerte
 
-Welcome to **StrongLife**! This project is a healthy lifestyle organizer designed to help you organize your routines, meals, and exercises at home. In the future, a gym option will be implemented, where you will be able to complete your daily routine interactively. It will be available for web, Android, and iOS.
+Welcome to **ToFuerte**! This project is a healthy lifestyle organizer designed to help you organize your routines, meals, and exercises at home. In the future, a gym option will be implemented, where you will be able to complete your daily routine interactively. It will be available for web, Android, and iOS.
 
 ## Technologies Used
 
@@ -70,7 +70,7 @@ mysql -u username -p database_name < path_to_db_file.sql
 
 ## 📫 Contributing
 
-If you'd like to contribute to **StrongLife**, feel free to open issues or submit pull requests. Any feedback and suggestions are always welcome!
+If you'd like to contribute to **ToFuerte**, feel free to open issues or submit pull requests. Any feedback and suggestions are always welcome!
 
 ---
 
