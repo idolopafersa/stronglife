@@ -9,7 +9,7 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Gym from './(gym)/Gym';
 import Kitchen from './(kitchen)/Kitchen';
-import Params from './(params)/Params';
+import Params from './(params)/_layout';
 import { CustomHeader } from '@/components/CustomHeader';
 
 const Tab = createBottomTabNavigator();

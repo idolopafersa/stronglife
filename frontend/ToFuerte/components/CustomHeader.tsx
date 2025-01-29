@@ -1,21 +1,24 @@
 import { useUser } from "@/app/context/UserContext";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 export  const CustomHeader = () => {
     
     const currentUser = useUser(); 
-
+    const router = useRouter();
 
     return (
         <View style={styles.headerContainer}>
           <Text style={styles.greetingText}>¿Listo para entrenar, {currentUser.username}?</Text>
            
-            <Image
-              source={{ uri: `http://stronglifeapi.fernandezpablo.es/api/user/getimage?user_id=${currentUser.id}` }}
-              style={styles.userImage}
-            />
+            <TouchableOpacity onPress={() => { router.push("/User") }}>
+              <Image
+                source={{ uri: `http://stronglifeapi.fernandezpablo.es/api/user/getimage?user_id=${currentUser.id}` }}
+                style={styles.userImage}
+              />
+            </TouchableOpacity>
           
         </View>
       );
