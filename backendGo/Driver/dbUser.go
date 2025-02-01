@@ -85,3 +85,20 @@ func GetUserID(name string) (int, error) {
 
 	return id, nil
 }
+
+func GetUsername(id int) (string, error) {
+	var username string
+	query := ("Select username from Users where id = ?")
+	err := db.QueryRow(query, id).Scan(&username)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			print(err)
+			return username, err
+		}
+		print(err)
+		return username, err
+	}
+
+	return username, nil
+}

@@ -10,7 +10,11 @@ export const login = async (username: string, password: string) => {
     const response = await axios.post(`${API_URL}/login`, {
       username,
       password,
-    });
+    },{
+      withCredentials: true,
+    }
+    
+  );
     console.log('Login successful', response.data);
     return response.data;
   } catch (error) {

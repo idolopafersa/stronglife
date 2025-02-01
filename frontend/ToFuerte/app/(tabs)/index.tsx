@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 function Index() {  //Punto de entrada, se encarga de redirigir a la pantalla de login o a la pantalla Gym
     const currentUser = useContext(UserContext);
   return (
-    <Stack.Navigator  screenOptions={{headerShown:false}} initialRouteName={currentUser?.isLoggedIn ? "Home" : "Login"}>
+    <Stack.Navigator  screenOptions={{headerShown:false}} initialRouteName={currentUser?.isLoggedIn ? "Gym" : "Login"}>
       
         <Stack.Screen name="Gym" component={Gym} />
       

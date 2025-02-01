@@ -4,7 +4,7 @@ export interface UserContextProps {   // Definimos las propiedades que tendrá e
   username: string;
   id: number;
   email: string;
-  
+  dayselected: string;
   isLoggedIn: boolean;
 }
 
