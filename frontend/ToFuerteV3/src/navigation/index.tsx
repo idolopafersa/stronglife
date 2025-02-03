@@ -11,11 +11,17 @@ import newspaper from '../assets/newspaper.png'
 import { Home } from './screens/Home'
 import { Profile } from './screens/Profile'
 import { Settings } from './screens/Settings'
-import { Updates } from './screens/Updates'
+import { Kitchen } from './screens/Kitchen'
 import { NotFound } from './screens/NotFound'
 import Login from './screens/Login'
 import { CustomHeader } from '../components/CustomHeader'
 import { useUser } from '../context/UserContext'
+import Custom from './screens/Custom'
+import ExerciseList from './screens/Exercise/ExerciseList'
+import EditExercise from './screens/Exercise/EditExercise'
+import RoutineList from './screens/Routine/RoutineList'
+import MealList from './screens/Meal/MealList'
+import EditMeal from './screens/Meal/EditMeal'
 
 function useIsSignedIn() {
   const currentUser = useUser()
@@ -46,8 +52,24 @@ const HomeTabs = createBottomTabNavigator({
         ),
       },
     },
-    Updates: {
-      screen: Updates,
+    Kitchen: {
+      screen: Kitchen,
+      options: {
+        header: (props) => <CustomHeader />,
+        tabBarIcon: ({ color, size }) => (
+          <Image
+            source={bell}
+            tintColor={color}
+            style={{
+              width: size,
+              height: size,
+            }}
+          />
+        ),
+      },
+    },
+    Custom: {
+      screen: Custom,
       options: {
         header: (props) => <CustomHeader />,
         tabBarIcon: ({ color, size }) => (
@@ -88,6 +110,21 @@ const RootStack = createNativeStackNavigator({
               user: (value) => `@${value}`,
             },
           },
+        },
+        ExerciseList: {
+          screen: ExerciseList,
+        },
+        EditExercise: {
+          screen: EditExercise,
+        },
+        RoutineList: {
+          screen: RoutineList,
+        },
+        MealList: {
+          screen: MealList,
+        },
+        EditMeal: {
+          screen: EditMeal,
         },
         Settings: {
           screen: Settings,

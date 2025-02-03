@@ -10,7 +10,7 @@ import (
 )
 
 func Getday(w http.ResponseWriter, r *http.Request) {
-	
+
 	date := r.URL.Query().Get("date")
 
 	userID, err := security.VerifyCookie(r)
@@ -31,7 +31,7 @@ func Getday(w http.ResponseWriter, r *http.Request) {
 
 func AddMealToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
-	mealID := r.URL.Query().Get("meal")
+	mealID := r.URL.Query().Get("meal_id")
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
@@ -52,7 +52,7 @@ func AddMealToDay(w http.ResponseWriter, r *http.Request) {
 
 func AddRoutineToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
-	routineID := r.URL.Query().Get("routine")
+	routineID := r.URL.Query().Get("routine_id")
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {

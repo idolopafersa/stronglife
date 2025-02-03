@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'https://stronglifeapi.fernandezpablo.es/api'
+const API_URL = 'http://localhost:7777/api'
 
 export const login = async (username: string, password: string) => {
   if (username === '' || password === '') {

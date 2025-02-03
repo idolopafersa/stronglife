@@ -107,21 +107,25 @@ func PutExercise(newexercise structmodels.Exercise, userID int) error {
 
 func GetAlExercises(userID int) ([]structmodels.Exercise, error) {
 	var exercises []structmodels.Exercise
-	query := "SELECT * FROM Exercises WHERE user_id = ?"
+	query := "SELECT id, name, description FROM Exercises WHERE user_id = ?"
 
 	rows, err := db.Query(query, userID)
 	if err != nil {
-
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var exercise structmodels.Exercise
-		if err := rows.Scan(&exercise.ID, &exercise.Name); err != nil {
+		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Description); err != nil {
 			return nil, err
 		}
 		exercises = append(exercises, exercise)
+	}
+
+	// Check for iteration errors
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 
 	return exercises, nil

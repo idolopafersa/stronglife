@@ -96,11 +96,10 @@ func UpdateMeal(meal structmodels.Meal, userID int) error {
 	return nil
 }
 
-func GetAllMeals() ([]structmodels.Meal, error) {
+func GetAllMeals(userID int) ([]structmodels.Meal, error) {
 	var meals []structmodels.Meal
 
-	// GetAllMeals retrieves all meals from the database which are public (isPublic = 1)
-	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs FROM Meals where isPublic = 1")
+	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs FROM Meals where  user_id = ?", userID)
 	if err != nil {
 		return nil, fmt.Errorf("error querying meals: %v", err)
 	}

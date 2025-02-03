@@ -125,12 +125,12 @@ func PutMeal(w http.ResponseWriter, r *http.Request) {
 
 func AllMeals(w http.ResponseWriter, r *http.Request) {
 
-	_, err := security.VerifyCookie(r)
+	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
 	}
 
-	meals, erre := driver.GetAllMeals()
+	meals, erre := driver.GetAllMeals(userID)
 	if erre != nil {
 		log.Printf("Error GET AllMeals driver: %s /n", erre)
 		http.Error(w, "meal not found", http.StatusNotFound)

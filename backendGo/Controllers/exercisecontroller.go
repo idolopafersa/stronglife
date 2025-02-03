@@ -69,7 +69,7 @@ func DelExercise(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
-		http.Error(w, "ID parameter is missing", http.StatusBadRequest)
+		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
 
