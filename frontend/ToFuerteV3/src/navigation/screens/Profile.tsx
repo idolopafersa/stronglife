@@ -1,17 +1,7 @@
-import { Text } from '@react-navigation/elements'
-import { StaticScreenProps } from '@react-navigation/native'
 import { StyleSheet, View } from 'react-native'
 
-type Props = StaticScreenProps<{
-  user: string
-}>
-
-export function Profile({ route }: Props) {
-  return (
-    <View style={styles.container}>
-      <Text>{route.params.user}'s Profile</Text>
-    </View>
-  )
+export function Profile() {
+  return <p>Hola</p>
 }
 
 const styles = StyleSheet.create({
