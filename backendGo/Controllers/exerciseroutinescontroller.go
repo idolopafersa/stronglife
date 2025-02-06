@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func GetrExercises(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +80,10 @@ func AddrExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	erre := driver.AddExerciseToRoutine(routineID, exerciseID, userID)
+	routineIDInt, _ := strconv.Atoi(routineID)
+	exerciseIDInt, _ := strconv.Atoi(exerciseID)
+
+	erre := driver.AddExerciseToRoutine(routineIDInt, exerciseIDInt, userID)
 	if erre != nil {
 		if erre.Error() == "forbidden: user does not have access to this routine" {
 			http.Error(w, "Forbidden", http.StatusForbidden)

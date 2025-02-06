@@ -12,7 +12,7 @@ func GetSet(routineID, exerciseID, setNumber string, userID int) (structmodels.S
 	var ownerID int
 
 	query := "SELECT routine_id, exercise_id, set_number, reps, weight, user_id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
-	err := db.QueryRow(query, routineID, exerciseID, setNumber).Scan(&set.RoutineID, &set.ExerciseID, &set.Set_number, &set.Reps, &set.Weight, &ownerID)
+	err := db.QueryRow(query, routineID, exerciseID, setNumber).Scan(&set.RoutineID, &set.ExerciseID, &set.SetNumber, &set.Reps, &set.Weight, &ownerID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return set, fmt.Errorf("no set found with the given routine_id, exercise_id, and set_number")
@@ -39,7 +39,7 @@ func GetAlSet(routineID, exerciseID string, userID int) ([]structmodels.Set, err
 
 	for rows.Next() {
 		var set structmodels.Set
-		if err := rows.Scan(&set.RoutineID, &set.ExerciseID, &set.Set_number, &set.Reps, &set.Weight); err != nil {
+		if err := rows.Scan(&set.RoutineID, &set.ExerciseID, &set.SetNumber, &set.Reps, &set.Weight); err != nil {
 			return nil, fmt.Errorf("error scanning set: %v", err)
 		}
 		sets = append(sets, set)
@@ -64,7 +64,7 @@ func GetAlSetRoutine(routineID string, userID int) ([]structmodels.Set, error) {
 
 	for rows.Next() {
 		var set structmodels.Set
-		if err := rows.Scan(&set.RoutineID, &set.ExerciseID, &set.Set_number, &set.Reps, &set.Weight); err != nil {
+		if err := rows.Scan(&set.RoutineID, &set.ExerciseID, &set.SetNumber, &set.Reps, &set.Weight); err != nil {
 			return nil, fmt.Errorf("error scanning set: %v", err)
 		}
 		sets = append(sets, set)
@@ -80,7 +80,7 @@ func GetAlSetRoutine(routineID string, userID int) ([]structmodels.Set, error) {
 func PutSet(set structmodels.Set, userID int) error {
 	var ownerID int
 	query := "SELECT user_id FROM Sets WHERE routine_id = ? AND exercise_id = ? AND set_number = ?"
-	err := db.QueryRow(query, set.RoutineID, set.ExerciseID, set.Set_number).Scan(&ownerID)
+	err := db.QueryRow(query, set.RoutineID, set.ExerciseID, set.SetNumber).Scan(&ownerID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return fmt.Errorf("no set found with the given routine_id, exercise_id, and set_number")
@@ -93,7 +93,7 @@ func PutSet(set structmodels.Set, userID int) error {
 	}
 
 	query = "UPDATE Sets SET reps = ?, weight = ? WHERE routine_id = ? AND exercise_id = ? AND user_id = ? AND set_number = ?"
-	_, err = db.Exec(query, set.Reps, set.Weight, set.RoutineID, set.ExerciseID, userID, set.Set_number)
+	_, err = db.Exec(query, set.Reps, set.Weight, set.RoutineID, set.ExerciseID, userID, set.SetNumber)
 	if err != nil {
 		log.Printf("Error updating set: %v", err)
 		return err
@@ -131,7 +131,7 @@ func PostSet(set structmodels.Set, userID int) error {
 	}
 
 	query = "INSERT INTO Sets (routine_id, exercise_id, set_number, weight, reps, user_id) VALUES (?, ?, ?, ?, ?, ?)"
-	_, err = db.Exec(query, set.RoutineID, set.ExerciseID, set.Set_number, set.Weight, set.Reps, userID)
+	_, err = db.Exec(query, set.RoutineID, set.ExerciseID, set.SetNumber, set.Weight, set.Reps, userID)
 	if err != nil {
 		log.Printf("Error inserting set: %v", err)
 		return err

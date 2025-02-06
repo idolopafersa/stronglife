@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func AddExerciseToRoutine(routineID, exerciseID string, userID int) error {
+func AddExerciseToRoutine(routineID, exerciseID, userID int) error {
 	var name string
 
 	// Comprobar que la rutina pertenece al usuario

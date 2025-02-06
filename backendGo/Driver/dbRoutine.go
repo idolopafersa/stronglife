@@ -82,7 +82,7 @@ func GetRoutine(id, userID int) (structmodels.Routine, error) {
 	return routine, nil
 }
 
-func PostRoutine(nroutine structmodels.NewRoutine, userID int) (int, error) {
+func PostRoutine(nroutine structmodels.Routine, userID int) (int, error) {
 	query := "INSERT INTO Routines (name, description, user_id) VALUES (?, ?, ?)"
 	result, err := db.Exec(query, nroutine.Name, nroutine.Description, userID)
 	if err != nil {

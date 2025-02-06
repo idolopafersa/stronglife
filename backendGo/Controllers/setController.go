@@ -9,11 +9,6 @@ import (
 	"net/http"
 )
 
-// hay que hacer las funciones pequeñas por si se necesitan de forma puntual. Pero hay que hacer tanto un Metodo Get y Post,
-// que cogan toda la información de un ejercicio o Rutina, para guardarla en caché en el móvil y sea más rápido.
-// Seguramente solo lo vea Ale, así que, que tal guapo.
-// Para guapo tú ;)
-
 func GetSet(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine_id")
 	exerciseID := r.URL.Query().Get("exercise_id")

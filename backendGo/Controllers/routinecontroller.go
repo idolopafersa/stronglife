@@ -12,20 +12,33 @@ import (
 )
 
 func PostRoutine(w http.ResponseWriter, r *http.Request) {
-	var routine structmodels.NewRoutine
+	var routine structmodels.Routine
 
+	// Decode the incoming request body into the Routine struct
 	if err := json.NewDecoder(r.Body).Decode(&routine); err != nil {
 		http.Error(w, "Invalid payload", http.StatusBadRequest)
 		fmt.Println(err)
 		return
 	}
 
+	// Verify the user ID from the cookie
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
 		return
 	}
 
+	// Check if the exercises belong to the user
+	for _, exercise := range routine.Exercises {
+		_, err := driver.GetExercise(exercise.ID, userID)
+		if err != nil {
+			log.Printf("Failed to get exercise: %d", exercise.ID)
+			http.Error(w, "You aren't the owner of the exercise or it doesn't exist", http.StatusForbidden)
+			return
+		}
+	}
+
+	// Create the routine in the database
 	id, err := driver.PostRoutine(routine, userID)
 	if err != nil {
 		log.Printf("Error POST Routine driver: %s\n", err)
@@ -33,8 +46,68 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var response struct {
+		ID        int    `json:"routine_id"`
+		Name      string `json:"routine_name"`
+		Exercises []struct {
+			ID          int                `json:"exercise_id"`
+			Name        string             `json:"name"`
+			Description string             `json:"description"`
+			Sets        []structmodels.Set `json:"sets"`
+		} `json:"exercises"`
+	}
+
+	// Add exercises to the routine and create sets
+	for _, exercise := range routine.Exercises {
+		err := driver.AddExerciseToRoutine(id, exercise.ID, userID)
+		if err != nil {
+			log.Printf("Failed to add exercise: %d", exercise.ID)
+			http.Error(w, "You aren't the owner of the exercise or it doesn't exist", http.StatusForbidden)
+			return
+		}
+
+		var exerciseWithSets struct {
+			ID          int                `json:"exercise_id"`
+			Name        string             `json:"name"`
+			Description string             `json:"description"`
+			Sets        []structmodels.Set `json:"sets"`
+		}
+		exerciseWithSets.ID = exercise.ID
+		exerciseWithSets.Name = exercise.Name
+		exerciseWithSets.Description = exercise.Description
+
+		for _, set := range exercise.Sets {
+			newSet := structmodels.Set{
+				RoutineID:  id,
+				ExerciseID: exercise.ID,
+				SetNumber:  set.SetNumber,
+				Reps:       set.Reps,
+				Weight:     set.Weight,
+			}
+			err := driver.PostSet(newSet, userID) // Handle error if needed
+			if err != nil {
+				log.Printf("Error adding set: %v", err)
+				http.Error(w, "Error adding set", http.StatusInternalServerError)
+				return
+			}
+
+			// Append the newly created set to the exercise's sets
+			exerciseWithSets.Sets = append(exerciseWithSets.Sets, newSet)
+		}
+
+		// Add the exercise (with sets) to the response
+		response.Exercises = append(response.Exercises, exerciseWithSets)
+	}
+
+	// Return the created routine as a JSON response, including sets
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(id)
+	w.WriteHeader(http.StatusCreated) // Status code 201 - Created
+
+	// Encode and send the JSON response
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		log.Printf("Error encoding JSON response: %s", err)
+		http.Error(w, "Error returning JSON response", http.StatusInternalServerError)
+	}
 }
 
 func GetRoutine(w http.ResponseWriter, r *http.Request) {
