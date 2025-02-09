@@ -47,7 +47,7 @@ const RoutineList = () => {
   }
 
   const handleSelectRoutine = (routine: Routine) => {
-    navigation.navigate('EditRoutine', { routine })
+    navigation.navigate('EditExercisesInRoutine', { routine_id: routine.id })
   }
 
   const handleCreate = () => {

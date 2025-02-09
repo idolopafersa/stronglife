@@ -15,7 +15,8 @@ func Getday(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
-		http.Error(w, "Error Cookie", http.StatusNotFound)
+		http.Error(w, "Error Cookie", http.StatusForbidden)
+		return
 	}
 
 	day, err := driver.GetDay(userID, date)
@@ -36,6 +37,7 @@ func AddMealToDay(w http.ResponseWriter, r *http.Request) {
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
+		return
 	}
 
 	erre := driver.AddMealToDay(date, strconv.Itoa(userID), mealID)
@@ -57,6 +59,7 @@ func AddRoutineToDay(w http.ResponseWriter, r *http.Request) {
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
+		return
 	}
 
 	erre := driver.AddRoutineToDay(date, strconv.Itoa(userID), routineID)
@@ -78,6 +81,7 @@ func DelMealToDay(w http.ResponseWriter, r *http.Request) {
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
+		return
 	}
 
 	erre := driver.DelMealToDay(date, strconv.Itoa(userID), mealID)

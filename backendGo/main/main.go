@@ -60,7 +60,6 @@ func main() {
 
 	//add,remove and get exercises of a routine
 	r.HandleFunc("/api/exercises/routines/get", controllers.GetrExercises).Methods("GET")
-	r.HandleFunc("/api/exercises/routines/get", controllers.GetrExercises).Methods("GET")
 	r.HandleFunc("/api/exercises/routines/post", controllers.AddrExercise).Methods("POST")
 	r.HandleFunc("/api/exercises/routines/del", controllers.DelrExercise).Methods("DELETE")
 

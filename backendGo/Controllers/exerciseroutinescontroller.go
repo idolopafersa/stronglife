@@ -69,14 +69,14 @@ func AddrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine_id")
 	exerciseID := r.URL.Query().Get("exercise_id")
 
-	if routineID == "" || exerciseID == "" {
-		http.Error(w, "Routine ID or Exercise ID parameter is missing", http.StatusBadRequest)
-		return
-	}
-
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error verifying cookie", http.StatusUnauthorized)
+		return
+	}
+
+	if routineID == "" || exerciseID == "" {
+		http.Error(w, "Routine ID or Exercise ID parameter is missing", http.StatusBadRequest)
 		return
 	}
 

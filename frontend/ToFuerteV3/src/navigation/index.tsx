@@ -22,6 +22,7 @@ import EditExercise from './screens/Exercise/EditExercise'
 import RoutineList from './screens/Routine/RoutineList'
 import MealList from './screens/Meal/MealList'
 import EditMeal from './screens/Meal/EditMeal'
+import EditExercisesInRoutine from './screens/Routine/EditExercisesInRoutine'
 
 function useIsSignedIn() {
   const currentUser = useUser()
@@ -119,6 +120,9 @@ const RootStack = createNativeStackNavigator({
         },
         RoutineList: {
           screen: RoutineList,
+        },
+        EditExercisesInRoutine: {
+          screen: EditExercisesInRoutine,
         },
         MealList: {
           screen: MealList,

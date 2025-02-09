@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { GetRoutine } from './RoutineServices'
 
 const API_URL = 'http://localhost:7777/api/day'
 axios.defaults.withCredentials = true
@@ -9,6 +10,18 @@ export const GetDay = async (date: string) => {
       params: { date },
     })
     return response.data
+  } catch (error) {
+    console.error('Error fetching day:', error)
+    throw error
+  }
+}
+
+export const GetRoutineDay = async (date: string) => {
+  try {
+    const routine = await axios.get(`${API_URL}/get`, {
+      params: { date },
+    })
+    return GetRoutine(routine.data.routine_id)
   } catch (error) {
     console.error('Error fetching day:', error)
     throw error
