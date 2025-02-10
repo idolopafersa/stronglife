@@ -56,6 +56,10 @@ const EditExercisesInRoutine = ({ route, navigation }: any) => {
     }
   }
 
+  const handleSelected = (exercise: Exercise) => {
+    console.log(exercise.id)
+  }
+
   // Filter exercises: Search through exercises that are not in the routine
   const filteredExercises = userExercises.filter(
     (exercise) =>
@@ -66,7 +70,9 @@ const EditExercisesInRoutine = ({ route, navigation }: any) => {
   const renderAllExercises = ({ item }: { item: Exercise }) => (
     <ListItem bottomDivider>
       <ListItem.Content>
-        <ListItem.Title>{item.name}</ListItem.Title>
+        <ListItem.Title onPress={() => handleAddToRoutine(item.id)}>
+          {item.name}
+        </ListItem.Title>
       </ListItem.Content>
       <Icon
         name="check"
@@ -81,7 +87,9 @@ const EditExercisesInRoutine = ({ route, navigation }: any) => {
   const renderRoutineExercises = ({ item }: { item: Exercise }) => (
     <ListItem bottomDivider>
       <ListItem.Content>
-        <ListItem.Title>{item.name}</ListItem.Title>
+        <ListItem.Title onPress={() => handleSelected(item)}>
+          {item.name}
+        </ListItem.Title>
       </ListItem.Content>
 
       <Icon

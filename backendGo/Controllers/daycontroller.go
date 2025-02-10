@@ -13,6 +13,11 @@ func Getday(w http.ResponseWriter, r *http.Request) {
 
 	date := r.URL.Query().Get("date")
 
+	if date == "" {
+		http.Error(w, "date parameter is missing", http.StatusBadRequest)
+		return
+	}
+
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusForbidden)
@@ -33,6 +38,11 @@ func Getday(w http.ResponseWriter, r *http.Request) {
 func AddMealToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
 	mealID := r.URL.Query().Get("meal_id")
+
+	if date == "" || mealID == "" {
+		http.Error(w, "date  or meal_id parameter is missing", http.StatusBadRequest)
+		return
+	}
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
@@ -56,6 +66,11 @@ func AddRoutineToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
 	routineID := r.URL.Query().Get("routine_id")
 
+	if date == "" || routineID == "" {
+		http.Error(w, "date  or routine_id parameter is missing", http.StatusBadRequest)
+		return
+	}
+
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
 		http.Error(w, "Error Cookie", http.StatusNotFound)
@@ -76,7 +91,12 @@ func AddRoutineToDay(w http.ResponseWriter, r *http.Request) {
 
 func DelMealToDay(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get("date")
-	mealID := r.URL.Query().Get("meal")
+	mealID := r.URL.Query().Get("meal_id")
+
+	if date == "" || mealID == "" {
+		http.Error(w, "date  or meal_id parameter is missing", http.StatusBadRequest)
+		return
+	}
 
 	userID, err := security.VerifyCookie(r)
 	if err != nil {
